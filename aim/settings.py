@@ -40,7 +40,7 @@ INSTALLED_APPS = [
     "allauth",
     "allauth.account",
     "rest_framework",
-    "user",
+    "users",
 ]
 
 MIDDLEWARE = [
@@ -55,7 +55,7 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = "aim.urls"
-
+AUTH_USER_MODEL = "users.User"
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
