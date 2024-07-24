@@ -11,6 +11,8 @@ class Product(ID, Dates, Name):
             ("FRAME", "Trunk Frame"),
             ("DRUM", "Drum Frame"),
             ("COOLER", "Cooler Frame"),
+            ("RING", "Ring Frame"),
+            ("ANGLE", "Angle"),
         ],
         default="FRAME",
     )

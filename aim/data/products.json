@@ -8,7 +8,7 @@
     "description": "Product with dimensions 23 x 23"
   },
   {
-    "name": "D-25 x 25",
+    "name": "D-25x25",
     "price": 0.0,
     "product_type": "DRUM",
     "dimensions": "25 x 25",
@@ -24,7 +24,7 @@
     "description": "Product with dimensions 25 ½ x 25 ½"
   },
   {
-    "name": "D-29 x 29",
+    "name": "D-29x29",
     "price": 0.0,
     "product_type": "DRUM",
     "dimensions": "29 x 29",
@@ -32,7 +32,7 @@
     "description": "Product with dimensions 29 x 29"
   },
   {
-    "name": "D-30 x 30",
+    "name": "D-30x30",
     "price": 0.0,
     "product_type": "DRUM",
     "dimensions": "30 x 30",
@@ -40,7 +40,7 @@
     "description": "Product with dimensions 30 x 30"
   },
   {
-    "name": "D-31 x 31",
+    "name": "D-31x31",
     "price": 0.0,
     "product_type": "DRUM",
     "dimensions": "31 x 31",
@@ -48,7 +48,7 @@
     "description": "Product with dimensions 31 x 31"
   },
   {
-    "name": "D-34 x 34",
+    "name": "D-34x34",
     "price": 0.0,
     "product_type": "DRUM",
     "dimensions": "34 x 34",
@@ -166,5 +166,125 @@
     "dimensions": "72 1¼ x 35",
     "size": "9.ft Height",
     "description": "Product with dimensions 72 1¼ x 35"
+  },
+  {
+    "name": "T-72 1½ x 36",
+    "price": 0.0,
+    "product_type": "TRUNK",
+    "dimensions": "72 1½ x 36",
+    "size": "12.ft Height",
+    "description": "Product 1½ Golay with dimensions 72 1½ x 36"
+  },
+  {
+    "name": "T-60 1½ x 36",
+    "price": 0.0,
+    "product_type": "TRUNK",
+    "dimensions": "60 1½ x 36",
+    "size": "12.ft Height",
+    "description": "Product 1½ Golay with dimensions 60 1½ x 36"
+  },
+  {
+    "name": "T-52x30",
+    "price": 0.0,
+    "product_type": "TRUNK",
+    "dimensions": "52 x 30",
+    "size": "1 inch 7.ft height",
+    "description": "Product 1 inch with dimensions 52 x 30"
+  },
+  {
+    "name": "T-47x27",
+    "price": 0.0,
+    "product_type": "TRUNK",
+    "dimensions": "47 x 27",
+    "size": "1 inch 7.ft height",
+    "description": "Product 1 inch with dimensions 47 x 27"
+  },
+  {
+    "name": "T-16x16",
+    "price": 0.0,
+    "product_type": "TRUNK",
+    "dimensions": "16 x 16",
+    "size": "1 Aata Box",
+    "description": "Product 1 inch with dimensions 16 x 16"
+  },
+  {
+    "name": "T-17½ x 17½",
+    "price": 0.0,
+    "product_type": "TRUNK",
+    "dimensions": "17½ x 17½",
+    "size": "N/A",
+    "description": "Product 1 inch with dimensions 17½ x 17½"
+  },
+  {
+    "name": "T-18x18",
+    "price": 0.0,
+    "product_type": "TRUNK",
+    "dimensions": "18 x 18",
+    "size": "N/A",
+    "description": "Product 1 inch with dimensions 18 x 18"
+  },
+  {
+    "name": "R-6ft set",
+    "price": 0.0,
+    "product_type": "RING",
+    "dimensions": "6 mm 17 gauge",
+    "size": "N/A",
+    "description": "Product set of 6.ft with 6 mm and 17 gauge."
+  },
+  {
+    "name": "R-8ft set",
+    "price": 0.0,
+    "product_type": "RING",
+    "dimensions": "6 mm 17 gauge",
+    "size": "N/A",
+    "description": "Product set of 8.ft with 6 mm and 17 gauge."
+  },
+  {
+    "name": "R-9ft set",
+    "price": 0.0,
+    "product_type": "RING",
+    "dimensions": "6 mm 17 gauge",
+    "size": "N/A",
+    "description": "Product set of 9.ft with 6 mm and 17 gauge."
+  },
+  {
+    "name": "R-10ft set",
+    "price": 0.0,
+    "product_type": "RING",
+    "dimensions": "6 mm 17 gauge",
+    "size": "N/A",
+    "description": "Product set of 10.ft with 6 mm and 17 gauge."
+  },
+  {
+    "name": "R-11ft set",
+    "price": 0.0,
+    "product_type": "RING",
+    "dimensions": "6 mm 17 gauge",
+    "size": "N/A",
+    "description": "Product set of 11.ft with 6 mm and 17 gauge."
+  },
+  {
+    "name": "R-12ft set",
+    "price": 0.0,
+    "product_type": "RING",
+    "dimensions": "6 mm 17 gauge",
+    "size": "N/A",
+    "description": "Product set of 12.ft with 6 mm and 17 gauge."
+  },
+  {
+    "name": "R-13ft set",
+    "price": 0.0,
+    "product_type": "RING",
+    "dimensions": "6 mm 17 gauge",
+    "size": "N/A",
+    "description": "Product set of 13.ft with 6 mm and 17 gauge."
+  },
+  {
+    "name": "R-3½ft set",
+    "price": 0.0,
+    "product_type": "RING",
+    "dimensions": "6 mm 17 gauge",
+    "size": "N/A",
+    "description": "Product set of 3½ft with 6 mm and 17 gauge."
   }
 ]
