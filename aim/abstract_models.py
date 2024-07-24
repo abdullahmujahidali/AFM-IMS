@@ -1,6 +1,7 @@
 from uuid import uuid4
 
 from django.db import models
+from django.utils import timezone
 
 from aim.validations import order_validation
 
@@ -17,7 +18,7 @@ class Dates(models.Model):
     """A base class for date and time that keeps the time of creation and \
         modification for objects of classes that inherit it."""
 
-    created_at = models.DateTimeField(auto_now_add=True)
+    created_at = models.DateTimeField(default=timezone.now)
     modified_at = models.DateTimeField(auto_now=True)
 
     class Meta:
@@ -29,6 +30,15 @@ class Ordering(models.Model):
         objects is important."""
 
     order = models.PositiveIntegerField(validators=[order_validation])
+
+    class Meta:
+        abstract = True
+
+
+class Name(models.Model):
+    """A class that stores the name for the classes that inherit it."""
+
+    name = models.CharField(max_length=255)
 
     class Meta:
         abstract = True
