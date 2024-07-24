@@ -24,9 +24,8 @@ from users.urls import user_router
 
 urlpatterns = [
     path("admin/", admin.site.urls),
-    # path("accounts/", include("allauth.urls")),
-    path("", include(product_router.urls)),
-    path("", include(user_router.urls)),
+    path("api/v1/products", include(product_router.urls)),
+    path("api/v1/users", include(user_router.urls)),
     path("api/token/", TokenObtainPairView.as_view(), name="token_obtain_pair"),
     path("api/token/refresh/", TokenRefreshView.as_view(), name="token_refresh"),
 ]
