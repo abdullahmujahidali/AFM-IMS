@@ -1,7 +1,6 @@
-from django.db import models
-
 from aim.abstract_models import ID, Dates, Name
 from aim.validations import phone_validation
+from django.db import models
 from products.models import Product
 
 
@@ -66,15 +65,11 @@ class Transaction(ID, Dates):
         choices=TRANSACTION_TYPE_CHOICES,
         default="DEBIT",
     )
-    amount = models.DecimalField(max_digits=10, decimal_places=2)
+    amount = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
     status = models.CharField(
         max_length=20,
         choices=STATUS_CHOICES,
         default="UNPAID",
-    )
-    payment_date = models.DateField(null=True, blank=True)
-    payment_amount = models.DecimalField(
-        max_digits=10, decimal_places=2, null=True, blank=True
     )
 
     def __str__(self):

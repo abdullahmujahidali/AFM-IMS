@@ -73,8 +73,6 @@ class TransactionAdmin(admin.ModelAdmin):
         "transaction_type",
         "amount",
         "status",
-        "payment_date",
-        "payment_amount",
         "created_at",
     )
     list_filter = ("transaction_type", "status", "created_at")
@@ -111,7 +109,5 @@ class TransactionAdmin(admin.ModelAdmin):
         "transaction_type",
         "amount",
         "status_color",
-        "payment_date",
-        "payment_amount",
         "created_at",
     )
