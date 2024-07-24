@@ -22,6 +22,7 @@ class Command(BaseCommand):
                 email="test@test.com",
                 password="testpass123",
             )
+
             user = User.objects.create(
                 id=uuid.UUID("79aa29d8-0bda-492a-aee1-edfc5a675927"),
                 first_name="Testing User",

@@ -278,5 +278,53 @@
     "dimensions": "6 mm 17 gauge",
     "size": "N/A",
     "description": "Product set of 13.ft with 6 mm and 17 gauge."
+  },
+  {
+    "name": "A-6ft set",
+    "price": 0.0,
+    "product_type": "ANGLE",
+    "dimensions": "4 mm 17 gauge",
+    "size": "N/A",
+    "description": "Product set of 6.ft with 4 mm and 17 gauge."
+  },
+  {
+    "name": "A-8ft set",
+    "price": 0.0,
+    "product_type": "ANGLE",
+    "dimensions": "4 mm 17 gauge",
+    "size": "N/A",
+    "description": "Product set of 8.ft with 4 mm and 17 gauge."
+  },
+  {
+    "name": "A-9ft set",
+    "price": 0.0,
+    "product_type": "ANGLE",
+    "dimensions": "4 mm 17 gauge",
+    "size": "N/A",
+    "description": "Product set of 9.ft with 4 mm and 17 gauge."
+  },
+  {
+    "name": "A-10ft set",
+    "price": 0.0,
+    "product_type": "ANGLE",
+    "dimensions": "4 mm 17 gauge",
+    "size": "N/A",
+    "description": "Product set of 10.ft with 4 mm and 17 gauge."
+  },
+  {
+    "name": "A-11ft set",
+    "price": 0.0,
+    "product_type": "ANGLE",
+    "dimensions": "4 mm 17 gauge",
+    "size": "N/A",
+    "description": "Product set of 11.ft with 4 mm and 17 gauge."
+  },
+  {
+    "name": "A-12ft set",
+    "price": 0.0,
+    "product_type": "ANGLE",
+    "dimensions": "4 mm 17 gauge",
+    "size": "N/A",
+    "description": "Product set of 12.ft with 4 mm and 17 gauge."
   }
 ]

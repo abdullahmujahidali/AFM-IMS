@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "allauth",
+    "aim",
     "allauth.account",
     "rest_framework",
     "rest_framework_simplejwt",
