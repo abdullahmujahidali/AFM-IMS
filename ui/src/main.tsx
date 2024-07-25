@@ -1,13 +1,12 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import "@mantine/core/styles.css";
 import React from "react";
 import ReactDOM from "react-dom/client";
 import App from "./App.tsx";
 import "./index.css";
 
-import { createTheme, MantineProvider, rem } from "@mantine/core";
+import { MantineProvider, rem } from "@mantine/core";
 
-const theme = createTheme({
+const theme = {
   colors: {
     // Add your custom color
     deepBlue: [
@@ -36,16 +35,16 @@ const theme = createTheme({
       "#364379",
     ],
     primary: [
-      "#eef3ff",
-      "#dee2f2",
-      "#bdc2de",
-      "#98a0ca",
-      "#7a84ba",
-      "#6672b0",
-      "#5c68ac",
-      "#4c5897",
-      "#424e88",
-      "#364379",
+      "#e5eaf8",
+      "#ccd6f7",
+      "#99aef3",
+      "#6685ee",
+      "#3064e8", // Primary color
+      "#0046d4",
+      "#003aaf",
+      "#002b8d",
+      "#001f6c",
+      "#001a5a",
     ],
     secondary: [
       "#fffbeb",
@@ -147,7 +146,29 @@ const theme = createTheme({
       h6: { fontSize: rem(14) },
     },
   },
-});
+  components: {
+    Button: {
+      styles: (theme) => ({
+        root: {
+          // padding: `${theme.spacing.sm} ${theme.spacing.lg}`,
+          // borderRadius: theme.radius.sm,
+          // backgroundColor: theme.colors.primary[5], // Adjust Button color
+          // color: theme.colors.white,
+        },
+      }),
+    },
+    Input: {
+      styles: (theme) => ({
+        input: {
+          borderColor: theme.colors.gray[4],
+          "&:focus": {
+            borderColor: theme.colors.primary[6], // Adjust Input focus color
+          },
+        },
+      }),
+    },
+  },
+};
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
