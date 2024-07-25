@@ -1,6 +1,16 @@
-import { Button } from "@mantine/core";
+import { Button } from "@/components/ui/button";
+import { useNavigate } from "react-router-dom";
 
 function Landing() {
+  const navigate = useNavigate();
+
+  const handleSignUpClick = () => {
+    navigate("/signup");
+  };
+
+  const handleLoginClick = () => {
+    navigate("/login");
+  };
   return (
     <div className="relative flex items-center justify-center flex-col gap-3 min-h-screen bg-cover bg-center">
       <img src="/logo2.svg" alt="Logo" className="w-32 h-auto mx-auto" />
@@ -12,8 +22,10 @@ function Landing() {
         customer, add products, record orders add transactions and much more.
       </p>
       <div className="flex gap-2">
-        <Button color="primary">Sign Up</Button>
-        <Button color="success" className="">
+        <Button variant="default" onClick={handleSignUpClick}>
+          Sign Up
+        </Button>
+        <Button variant="outline" onClick={handleLoginClick}>
           Login
         </Button>
       </div>

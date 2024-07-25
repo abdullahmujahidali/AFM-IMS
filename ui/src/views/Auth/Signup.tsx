@@ -8,6 +8,7 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
+
 import { Input } from "@/components/ui/input";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Anchor } from "@mantine/core";
@@ -31,6 +32,7 @@ function SignUp() {
       first_name: "",
     },
   });
+
   function onSubmit(values: z.infer<typeof formSchema>) {
     axiosInstance
       .post("api/v1/users/", values)

@@ -1,32 +1,64 @@
 import { TooltipProvider } from "@/components/ui/tooltip";
-import { ComponentProps } from "react";
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import { ComponentProps, Suspense } from "react";
+import {
+  createBrowserRouter,
+  Navigate,
+  RouterProvider,
+} from "react-router-dom";
 import { SWRConfig } from "swr";
 import "./App.css";
 import axiosInstance from "./axiosInstance";
+import DashboardLayout from "./layouts/DashboardLayout";
+import PublicViewLayout from "./layouts/PublicViewLayout";
 import SignIn from "./views/Auth/Signin";
 import SignUp from "./views/Auth/Signup";
-import Landing from "./views/Landing/Landing";
 import Dashboard from "./views/Dashboard/Dashboard";
+import Landing from "./views/Landing/Landing";
 
 const router = createBrowserRouter([
   {
-    path: "/",
-    element: <Landing />,
+    path: "",
+    element: (
+      <PublicViewLayout>
+        <Suspense fallback={<span />}></Suspense>
+      </PublicViewLayout>
+    ),
+    children: [
+      {
+        path: "/",
+        element: <Landing />,
+      },
+      {
+        path: `signup`,
+        element: <SignUp />,
+      },
+      {
+        path: "login",
+        element: <SignIn />,
+      },
+    ],
   },
   {
-    path: "signup",
-    element: <SignUp />,
-  },
-  {
-    path: "login",
-    element: <SignIn />,
-  },
-  {
-    path: "/", //for authenticated users
-    element: <Dashboard />,
+    path: "/dashboard",
+    element: <DashboardLayout />,
+    children: [
+      {
+        path: "",
+        element: <Navigate to="/dashboard/customers" replace />,
+      },
+      {
+        path: "customers",
+        children: [
+          {
+            path: "",
+            element: <Dashboard />,
+          },
+        ],
+      },
+    ],
   },
 ]);
+
 const swrConfig = {
   fetcher: (res) => axiosInstance.get(res).then((r) => r.data),
   focusThrottleInterval: 30000,

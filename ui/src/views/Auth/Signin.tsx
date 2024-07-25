@@ -1,10 +1,5 @@
 import axiosInstance from "@/axiosInstance";
 import { Button } from "@/components/ui/button";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { Anchor } from "@mantine/core";
-import { useForm } from "react-hook-form";
-import { z } from "zod";
-
 import {
   Form,
   FormControl,
@@ -13,10 +8,15 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import useAuth from "@/hooks/useAuth";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Anchor } from "@mantine/core";
+import { useForm } from "react-hook-form";
 import { NavLink, useNavigate } from "react-router-dom";
 import { toast, Toaster } from "sonner";
+import { z } from "zod";
 
-import { Input } from "@/components/ui/input";
 const formSchema = z.object({
   email: z.string().email({ message: "Invalid email address" }),
   password: z.string().min(5).max(50),
@@ -24,6 +24,8 @@ const formSchema = z.object({
 
 function SignIn() {
   const navigate = useNavigate();
+  const { setToken } = useAuth();
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -31,16 +33,17 @@ function SignIn() {
       password: "",
     },
   });
+
   function onSubmit(values: z.infer<typeof formSchema>) {
     axiosInstance
       .post("/api/token/", values)
-      .then((data) => {
+      .then((res) => {
         toast.success(`Login Success`);
-        localStorage.setItem("access", data?.data?.access);
-        localStorage.setItem("refresh", data?.data?.refresh);
-        navigate("/");
+        setToken(res?.data);
+        navigate("/dashboard");
       })
       .catch((e) => {
+        console.log("e: ", e);
         toast.error(e?.response?.data?.detail);
       });
   }
@@ -70,7 +73,7 @@ function SignIn() {
               name="password"
               render={({ field }) => (
                 <FormItem className="text-left">
-                  <FormLabel className="text-left">Password</FormLabel>
+                  <FormLabel>Password</FormLabel>
                   <FormControl>
                     <Input placeholder="*********" type="password" {...field} />
                   </FormControl>
