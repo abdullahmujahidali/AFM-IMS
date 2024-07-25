@@ -19,7 +19,7 @@ const formSchema = z.object({
   password: z.string().min(5).max(50),
 });
 
-function SignUp() {
+function SignIn() {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -69,12 +69,11 @@ function SignUp() {
                 </FormItem>
               )}
             />
-
             <div className="flex flex-col gap-2">
-              <Button type="submit">Register</Button>
-              <NavLink to="/login/">
+              <Button type="submit">Login</Button>
+              <NavLink to="/signup/">
                 <Anchor fw={500} fz="sm">
-                  Already have an account?
+                  Don't have an account?
                 </Anchor>
               </NavLink>
             </div>
@@ -85,4 +84,4 @@ function SignUp() {
   );
 }
 
-export default SignUp;
+export default SignIn;
