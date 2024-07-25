@@ -9,7 +9,13 @@ export default {
   ],
   theme: {
     extend: {
+      backgroundImage: {
+        'hero-pattern': "url('https://c1.wallpaperflare.com/preview/457/29/154/metallurgy-a-ferro-alloy-the-electric-arched-furnace-coal.jpg')",
+      },
       colors: {
+        colors: {
+          'overlay': 'rgba(0, 0, 0, 0.5)', // Custom overlay color
+        },
         primary: {
           DEFAULT: '#3490dc',
           light: '#3cbaeb',

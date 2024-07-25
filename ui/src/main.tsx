@@ -147,26 +147,6 @@ const theme = createTheme({
       h6: { fontSize: rem(14) },
     },
   },
-  components: {
-    Button: {
-      styles: (theme: any) => ({
-        root: {
-          padding: `${theme.spacing.sm} ${theme.spacing.lg}`,
-          borderRadius: theme.radius.sm,
-        },
-      }),
-    },
-    Input: {
-      styles: (theme: any) => ({
-        input: {
-          borderColor: theme.colors.gray[4],
-          "&:focus": {
-            borderColor: theme.colors.blue[6],
-          },
-        },
-      }),
-    },
-  },
 });
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
