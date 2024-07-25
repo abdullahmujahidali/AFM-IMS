@@ -14,6 +14,7 @@ import SignIn from "./views/Auth/Signin";
 import SignUp from "./views/Auth/Signup";
 import Dashboard from "./views/Dashboard/Dashboard";
 import Landing from "./views/Landing/Landing";
+import ProductsView from "./views/Products/Products";
 
 const router = createBrowserRouter([
   {
@@ -52,6 +53,15 @@ const router = createBrowserRouter([
           {
             path: "",
             element: <Dashboard />,
+          },
+        ],
+      },
+      {
+        path: "products",
+        children: [
+          {
+            path: "",
+            element: <ProductsView />,
           },
         ],
       },

@@ -1,9 +1,25 @@
+import { DataTableDemo } from "@/components/ui/DataTable";
+import useSWR from "swr";
+
 function Dashboard() {
+  const { data, error, isLoading } = useSWR("/api/v1/sales/customers/");
+  console.log("data: ", data);
+
+  const columns = [
+    { accessorKey: "name", header: "Name" },
+    { accessorKey: "phone_number", header: "Phone Number" },
+    { accessorKey: "created_at", header: "Created At" },
+    { accessorKey: "modified_at", header: "Modified At" },
+  ];
+
+  if (isLoading) return <div>Loading...</div>;
+  if (error) return <div>Error loading data</div>;
+
   return (
-    <div className="relative flex items-center justify-center flex-col gap-3 min-h-screen bg-cover bg-center">
-      <img src="/logo2.svg" alt="Logo" className="w-32 h-auto mx-auto" />
-      <h1 className="lg:text-7xl  text-4xl font-bold">Dashboard</h1>
-    </div>
+    <section className=" ">
+      <h1 className="font-bold">Dashboard</h1>
+      {data && <DataTableDemo data={data.results} columns={columns} />}
+    </section>
   );
 }
 
