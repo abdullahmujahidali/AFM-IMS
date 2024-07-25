@@ -11,7 +11,15 @@ import {
   getSortedRowModel,
   useReactTable,
 } from "@tanstack/react-table";
-import { ChevronDown } from "lucide-react";
+
+import { DialogTrigger } from "@/components/ui/dialog";
+
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+import { ChevronDown, CirclePlusIcon } from "lucide-react";
 import * as React from "react";
 
 import { Button } from "@/components/ui/button";
@@ -31,7 +39,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 
-export function DataTableDemo({ data, columns }) {
+export function DataTableDemo({ data, columns, type }) {
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     []
@@ -63,7 +71,7 @@ export function DataTableDemo({ data, columns }) {
     <div className="w-full">
       <div className="flex items-center py-4">
         <Input
-          placeholder="Filter emails..."
+          placeholder="Filter name..."
           value={(table.getColumn("name")?.getFilterValue() as string) ?? ""}
           onChange={(event) =>
             table.getColumn("name")?.setFilterValue(event.target.value)
@@ -76,6 +84,19 @@ export function DataTableDemo({ data, columns }) {
               Columns <ChevronDown className="ml-2 h-4 w-4" />
             </Button>
           </DropdownMenuTrigger>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <DialogTrigger asChild>
+                <Button size="icon" variant="ghost" className="ml-2">
+                  <CirclePlusIcon />
+                </Button>
+              </DialogTrigger>
+            </TooltipTrigger>
+            <TooltipContent>
+              <p>Add a new {type}</p>
+            </TooltipContent>
+          </Tooltip>
+
           <DropdownMenuContent align="end">
             {table
               .getAllColumns()

@@ -96,39 +96,14 @@ export default function Header() {
           <NavigationMenu>
             <NavigationMenuList>
               <NavigationMenuItem>
-                <NavigationMenuTrigger>Getting started</NavigationMenuTrigger>
+                <NavigationMenuTrigger>Sales</NavigationMenuTrigger>
                 <NavigationMenuContent>
-                  <ul className="grid gap-3 p-6 md:w-[400px] lg:w-[500px] lg:grid-cols-[.75fr_1fr]">
-                    <li className="row-span-3">
-                      {/* <NavigationMenuLink asChild>
-                        <a
-                          className="flex h-full w-full select-none flex-col justify-end rounded-md bg-gradient-to-b from-muted/50 to-muted p-6 no-underline outline-none focus:shadow-md"
-                          href="/"
-                        >
-                          {/* <Icons.logo className="h-6 w-6" /> */}
-                          <div className="mb-2 mt-4 text-lg font-medium">
-                            shadcn/ui
-                          </div>
-                          <p className="text-sm leading-tight text-muted-foreground">
-                            Beautifully designed components that you can copy
-                            and paste into your apps. Accessible. Customizable.
-                            Open Source.
-                          </p>
-                        </a>
-                      </NavigationMenuLink> */}
-                    </li>
-                    <ListItem href="/docs" title="Introduction">
-                      Re-usable components built using Radix UI and Tailwind
-                      CSS.
+                  <ul className="grid gap-3 p-6 md:w-[300px] lg:w-[300px] lg:grid-rows-[.75fr_1fr]">
+                    <ListItem href="/dashboard/customers" title="Customers">
+                      List of all customers.
                     </ListItem>
-                    <ListItem href="/docs/installation" title="Installation">
-                      How to install dependencies and structure your app.
-                    </ListItem>
-                    <ListItem
-                      href="/docs/primitives/typography"
-                      title="Typography"
-                    >
-                      Styles for headings, paragraphs, lists...etc
+                    <ListItem href="/dashboard/products" title="Products">
+                      List of all products offered by AFM.
                     </ListItem>
                   </ul>
                 </NavigationMenuContent>
@@ -149,9 +124,9 @@ export default function Header() {
                   </ul>
                 </NavigationMenuContent>
               </NavigationMenuItem>
-              <NavigationMenuItem>
-                <NavLink href="/docs" legacyBehavior passHref>
-                  <NavigationMenuLink>Documentation</NavigationMenuLink>
+              <NavigationMenuItem className="pl-2">
+                <NavLink to="/docs">
+                  <Button variant="default">Logout</Button>
                 </NavLink>
               </NavigationMenuItem>
             </NavigationMenuList>
@@ -175,18 +150,12 @@ export default function Header() {
       </div>
       {isMenuOpen && (
         <div className="mt-4 md:hidden" id="mobile-menu">
-          <NavLink
-            to="#"
-            className="block py-1 text-zinc-800 hover:text-zinc-600 dark:text-zinc-200 dark:hover:text-zinc-100"
-          >
-            Home
-          </NavLink>
           <NavigationMenu>
             <NavigationMenuList className="group flex flex-col list-none space-y-1">
               <NavigationMenuItem>
                 <NavigationMenuTrigger>Getting started</NavigationMenuTrigger>
                 <NavigationMenuContent>
-                  <ul className="grid gap-3 p-6 md:w-[400px] lg:w-[500px] lg:grid-cols-[.75fr_1fr]">
+                  <ul className="grid gap-3 p-6 md:w-[300px] lg:w-[300px] lg:grid-rows-[.75fr_1fr]">
                     <li className="row-span-3">
                       <NavigationMenuLink asChild>
                         <a
@@ -224,7 +193,7 @@ export default function Header() {
               <NavigationMenuItem>
                 <NavigationMenuTrigger>Components</NavigationMenuTrigger>
                 <NavigationMenuContent>
-                  <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px] ">
+                  <ul className="grid w-[300px] gap-3 p-4 md:w-[300px] md:grid-rows-2 lg:w-[300px] ">
                     {components.map((component) => (
                       <ListItem
                         key={component.title}
@@ -244,47 +213,9 @@ export default function Header() {
               </NavigationMenuItem>
             </NavigationMenuList>
           </NavigationMenu>
-          <NavLink
-            to="#"
-            className="block py-1 text-zinc-800 hover:text-zinc-600 dark:text-zinc-200 dark:hover:text-zinc-100"
-          >
-            About
-          </NavLink>
-          <NavLink
-            to="#"
-            className="block py-1 text-zinc-800 hover:text-zinc-600 dark:text-zinc-200 dark:hover:text-zinc-100"
-          >
-            Services
-          </NavLink>
-          <NavLink
-            to="#"
-            className="block py-1 text-zinc-800 hover:text-zinc-600 dark:text-zinc-200 dark:hover:text-zinc-100"
-          >
-            Contact
-          </NavLink>
         </div>
       )}
     </section>
-  );
-}
-
-function HomeIcon(props) {
-  return (
-    <svg
-      {...props}
-      xmlns="http://www.w3.org/2000/svg"
-      width="24"
-      height="24"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
-      <polyline points="9 22 9 12 15 12 15 22" />
-    </svg>
   );
 }
 
