@@ -1,0 +1,5 @@
+/* Add this to your custom CSS file */
+.dynamic-height {
+  height: calc(100vh - var(--offset));
+  overflow-y: auto;
+}

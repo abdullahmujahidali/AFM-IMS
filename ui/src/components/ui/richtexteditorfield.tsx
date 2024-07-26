@@ -7,7 +7,7 @@ const RichTextEditorField = ({ placeholder, setEditorHtml, editorHtml }) => {
   };
 
   return (
-    <div>
+    <div className="max-h-32 overflow-y-auto">
       <ReactQuill
         onChange={handleChange}
         value={editorHtml}

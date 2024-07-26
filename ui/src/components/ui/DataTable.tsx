@@ -12,7 +12,7 @@ import {
   useReactTable,
 } from "@tanstack/react-table";
 
-import { DialogTrigger } from "@/components/ui/dialog";
+import { SheetTrigger } from "@/components/ui/sheet";
 
 import {
   Tooltip,
@@ -86,11 +86,11 @@ export function DataTableDemo({ data, columns, type }) {
           </DropdownMenuTrigger>
           <Tooltip>
             <TooltipTrigger asChild>
-              <DialogTrigger asChild>
+              <SheetTrigger>
                 <Button size="icon" variant="ghost" className="ml-2">
                   <CirclePlusIcon />
                 </Button>
-              </DialogTrigger>
+              </SheetTrigger>
             </TooltipTrigger>
             <TooltipContent>
               <p>Add a new {type}</p>

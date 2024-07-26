@@ -1,16 +1,17 @@
 import axiosInstance from "@/axiosInstance";
 import { Button } from "@/components/ui/button";
 import { DataTableDemo } from "@/components/ui/DataTable";
-import {
-  Dialog,
-  DialogContent,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
+import { DialogFooter } from "@/components/ui/dialog";
 import { useState } from "react";
 import "react-quill/dist/quill.snow.css";
 import useSWR from "swr";
+
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+} from "@/components/ui/sheet";
 
 import {
   Select,
@@ -91,15 +92,15 @@ function ProductsView() {
   return (
     <section>
       <h1 className="font-bold">ProductsView</h1>
-      <Dialog>
+      <Sheet>
         {data && (
           <DataTableDemo data={data.results} columns={columns} type="Product" />
         )}
-        <DialogContent className="sm:max-w-[425px]">
-          <DialogHeader>
-            <DialogTitle>Add a new product</DialogTitle>
-          </DialogHeader>
-          <div className="grid gap-4 py-4">
+        <SheetContent>
+          <SheetHeader>
+            <SheetTitle>Add a Product</SheetTitle>
+          </SheetHeader>
+          <div className="grid gap-2 md:gap-4 py-1 md:py-4">
             <Form {...form}>
               <form
                 onSubmit={form.handleSubmit(onSubmit)}
@@ -118,81 +119,76 @@ function ProductsView() {
                     </FormItem>
                   )}
                 />
-                <div className="flex w-full gap-2">
-                  <FormField
-                    control={form.control}
-                    name="product_type"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Email</FormLabel>
-                        <Select
-                          onValueChange={field.onChange}
-                          defaultValue={field.value}
-                        >
-                          <FormControl>
-                            <SelectTrigger>
-                              <SelectValue placeholder="Choose a Product Type" />
-                            </SelectTrigger>
-                          </FormControl>
-                          <SelectContent>
-                            <SelectGroup>
-                              <SelectItem value="FRAME">Trunk Frame</SelectItem>
-                              <SelectItem value="DRUM">Drum Frame</SelectItem>
-                              <SelectItem value="COOLER">
-                                Cooler Frame
-                              </SelectItem>
-                              <SelectItem value="RING">Ring Frame</SelectItem>
-                              <SelectItem value="ANGLE">Angle Frame</SelectItem>
-                            </SelectGroup>
-                          </SelectContent>
-                        </Select>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                  <FormField
-                    control={form.control}
-                    name="price"
-                    render={({ field }) => (
-                      <FormItem className="text-left">
-                        <FormLabel>Price</FormLabel>
-                        <FormControl>
-                          <Input type="number" {...field} />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                </div>
+                <FormField
+                  control={form.control}
+                  name="price"
+                  render={({ field }) => (
+                    <FormItem className="text-left">
+                      <FormLabel>Price</FormLabel>
+                      <FormControl>
+                        <Input type="number" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
 
-                <div className="flex w-full gap-2">
-                  <FormField
-                    control={form.control}
-                    name="dimension"
-                    render={({ field }) => (
-                      <FormItem className="text-left">
-                        <FormLabel>Dimension</FormLabel>
+                <FormField
+                  control={form.control}
+                  name="product_type"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Email</FormLabel>
+                      <Select
+                        onValueChange={field.onChange}
+                        defaultValue={field.value}
+                      >
                         <FormControl>
-                          <Input placeholder="72 1¼ x 35" {...field} />
+                          <SelectTrigger className="w-full">
+                            <SelectValue placeholder="Choose a Product Type" />
+                          </SelectTrigger>
                         </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                  <FormField
-                    control={form.control}
-                    name="size"
-                    render={({ field }) => (
-                      <FormItem className="text-left">
-                        <FormLabel>Size</FormLabel>
-                        <FormControl>
-                          <Input placeholder="9.ft Height" {...field} />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                </div>
+                        <SelectContent>
+                          <SelectGroup>
+                            <SelectItem value="FRAME">Trunk Frame</SelectItem>
+                            <SelectItem value="DRUM">Drum Frame</SelectItem>
+                            <SelectItem value="COOLER">Cooler Frame</SelectItem>
+                            <SelectItem value="RING">Ring Frame</SelectItem>
+                            <SelectItem value="ANGLE">Angle Frame</SelectItem>
+                          </SelectGroup>
+                        </SelectContent>
+                      </Select>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={form.control}
+                  name="dimension"
+                  render={({ field }) => (
+                    <FormItem className="text-left">
+                      <FormLabel>Dimension</FormLabel>
+                      <FormControl>
+                        <Input placeholder="72 1¼ x 35" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="size"
+                  render={({ field }) => (
+                    <FormItem className="text-left">
+                      <FormLabel>Size</FormLabel>
+                      <FormControl>
+                        <Input placeholder="9.ft Height" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
 
                 <FormField
                   control={form.control}
@@ -219,8 +215,8 @@ function ProductsView() {
               </form>
             </Form>
           </div>
-        </DialogContent>
-      </Dialog>
+        </SheetContent>
+      </Sheet>
     </section>
   );
 }
