@@ -4,7 +4,7 @@ import { Suspense, useState } from "react";
 import { Outlet } from "react-router-dom";
 import useSWR from "swr";
 
-export default function DashboardLayout({ children }) {
+export default function DashboardLayout() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const { data, isLoading } = useSWR("/api/v1/users/me/");
 
@@ -44,10 +44,10 @@ export default function DashboardLayout({ children }) {
       <div className="text-center">
         <p className="text-base font-semibold text-indigo-600">Oops!</p>
         <h1 className="mt-4 text-3xl font-bold tracking-tight text-gray-900 sm:text-5xl">
-          Page not found
+          Your company is not activated yet!
         </h1>
         <p className="mt-6 text-base leading-7 text-gray-600">
-          Looks like your organization status is not approved yet.
+          Contact to the support to solve your issue.
         </p>
         <div className="mt-4 flex items-center justify-center gap-x-6">
           <a

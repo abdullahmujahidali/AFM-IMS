@@ -1,5 +1,3 @@
-from uuid import uuid4
-
 from aim.abstract_models import ID, Dates, Name
 from aim.utils import generate_unique_slug
 from django.db import models
