@@ -1,23 +1,12 @@
-import { ReactElement, useRef } from "react";
-import { Navigate } from "react-router-dom";
-
 import useAuth, { AuthStatus } from "@/hooks/useAuth";
+import { Navigate, Outlet } from "react-router-dom";
 
-export default function PublicViewLayout({
-  children,
-}: {
-  children: ReactElement;
-}) {
+export default function PublicViewLayout() {
   const { status } = useAuth();
-  const isLoggedOut = useRef(false);
 
-  if (status === AuthStatus.LOGGED_IN && !isLoggedOut.current) {
+  if (status === AuthStatus.LOGGED_IN) {
     return <Navigate to="/dashboard" replace />;
   }
 
-  if (status === AuthStatus.LOGGED_OUT) {
-    isLoggedOut.current = true;
-  }
-
-  return children;
+  return <Outlet />;
 }

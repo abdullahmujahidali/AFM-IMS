@@ -1,5 +1,5 @@
 import { TooltipProvider } from "@/components/ui/tooltip";
-import { ComponentProps, Suspense } from "react";
+import { ComponentProps } from "react";
 import {
   createBrowserRouter,
   Navigate,
@@ -19,18 +19,14 @@ import ProductsView from "./views/Products/Products";
 const router = createBrowserRouter([
   {
     path: "",
-    element: (
-      <PublicViewLayout>
-        <Suspense fallback={<span />}></Suspense>
-      </PublicViewLayout>
-    ),
+    element: <PublicViewLayout />,
     children: [
       {
         path: "/",
         element: <Landing />,
       },
       {
-        path: `signup`,
+        path: "signup",
         element: <SignUp />,
       },
       {
