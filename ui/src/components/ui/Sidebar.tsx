@@ -125,7 +125,7 @@ export default function Sidebar({
                   <li className="-mx-6 mt-auto">
                     <a
                       href="#"
-                      className="flex items-center gap-x-4 px-6 py-3 text-sm font-semibold leading-6 text-white hover:bg-gray-800"
+                      className="flex items-center gap-x-4 px-6 py-3 text-sm font-semibold leading-6 text-black hover:bg-gray-400"
                     >
                       <img
                         alt=""
@@ -133,7 +133,7 @@ export default function Sidebar({
                         className="h-8 w-8 rounded-full bg-gray-800"
                       />
                       <span className="sr-only">Your profile</span>
-                      <span aria-hidden="true">
+                      <span aria-hidden="true" className="text-black">
                         {isLoading ? (
                           <Skeleton className="h-4 w-[120px]" />
                         ) : (
@@ -191,7 +191,7 @@ export default function Sidebar({
                     className="h-8 w-8 rounded-full bg-gray-800"
                   />
                   <span className="sr-only">Your profile</span>
-                  <span aria-hidden="true">
+                  <span className="text-black" aria-hidden="true">
                     {isLoading ? (
                       <Skeleton className="h-4 w-[120px]" />
                     ) : (

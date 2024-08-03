@@ -1,19 +1,22 @@
-# company/models.py
-
 from uuid import uuid4
 
+from aim.abstract_models import ID, Dates, Name
+from aim.utils import generate_unique_slug
 from django.db import models
 
 
-class Company(models.Model):
-    id = models.UUIDField(default=uuid4, primary_key=True, editable=False)
+class Company(ID, Name, Dates):
     name = models.CharField(max_length=255)
+    slug = models.SlugField(unique=True, blank=True)
     status = models.BooleanField(default=False)
     owner = models.OneToOneField(
         "users.User", on_delete=models.CASCADE, related_name="owned_company"
     )
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
+
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            self.slug = generate_unique_slug(self.name, Company)
+        super().save(*args, **kwargs)
 
     def __str__(self):
         return self.name

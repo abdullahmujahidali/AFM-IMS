@@ -1,4 +1,7 @@
+from aim.permissions import IsCompanyActive
+from aim.utils import generate_unique_slug
 from company.models import Company
+from company.serializers import CompanySerializer
 from django.db import transaction
 from rest_framework import status, viewsets
 from rest_framework.decorators import action
@@ -30,7 +33,8 @@ class UserViewSet(viewsets.ModelViewSet):
         # Then, create the company
         company_data = request.data.get("company_name")
         if company_data:
-            company = Company.objects.create(name=company_data, owner=user)
+            slug = generate_unique_slug(company_data, Company)
+            company = Company.objects.create(name=company_data, owner=user, slug=slug)
 
             user.company = company
             user.save()
@@ -43,11 +47,22 @@ class UserViewSet(viewsets.ModelViewSet):
             user_serializer.data, status=status.HTTP_201_CREATED, headers=headers
         )
 
-    @action(detail=False, methods=["get"], permission_classes=[IsAuthenticated])
+    @action(
+        detail=False,
+        methods=["get"],
+        permission_classes=[IsAuthenticated, IsCompanyActive],
+    )
     def me(self, request):
         """
-        Retrieve the details of the currently logged-in user.
+        Retrieve the details of the currently logged-in user along with company details.
         """
         user = request.user
-        serializer = self.get_serializer(user)
-        return Response(serializer.data)
+        user_serializer = self.get_serializer(user)
+        user_data = user_serializer.data
+
+        # Add company data to the response
+        if user.company:
+            company_serializer = CompanySerializer(user.company)
+            user_data["company"] = company_serializer.data
+
+        return Response(user_data)
