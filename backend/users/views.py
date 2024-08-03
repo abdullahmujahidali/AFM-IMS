@@ -1,8 +1,11 @@
+from company.models import Company
+from django.db import transaction
 from rest_framework import status, viewsets
+from rest_framework.decorators import action
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework_simplejwt.authentication import JWTAuthentication
-
+from usercompanyrelation.models import UserCompanyRelation
 from users.models import User
 from users.serializers import UserSerializer
 
@@ -17,11 +20,34 @@ class UserViewSet(viewsets.ModelViewSet):
             return [AllowAny()]
         return [IsAuthenticated()]
 
+    @transaction.atomic
     def create(self, request, *args, **kwargs):
-        serializer = self.get_serializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        self.perform_create(serializer)
-        headers = self.get_success_headers(serializer.data)
+        # First, create the user
+        user_serializer = self.get_serializer(data=request.data)
+        user_serializer.is_valid(raise_exception=True)
+        user = user_serializer.save()
+
+        # Then, create the company
+        company_data = request.data.get("company_name")
+        if company_data:
+            company = Company.objects.create(name=company_data, owner=user)
+
+            user.company = company
+            user.save()
+
+            # Finally, create the UserCompanyRelation
+            UserCompanyRelation.objects.create(user=user, company=company, role="Owner")
+
+        headers = self.get_success_headers(user_serializer.data)
         return Response(
-            serializer.data, status=status.HTTP_201_CREATED, headers=headers
+            user_serializer.data, status=status.HTTP_201_CREATED, headers=headers
         )
+
+    @action(detail=False, methods=["get"], permission_classes=[IsAuthenticated])
+    def me(self, request):
+        """
+        Retrieve the details of the currently logged-in user.
+        """
+        user = request.user
+        serializer = self.get_serializer(user)
+        return Response(serializer.data)

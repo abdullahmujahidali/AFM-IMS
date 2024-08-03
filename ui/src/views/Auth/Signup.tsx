@@ -20,6 +20,7 @@ const formSchema = z.object({
   email: z.string().email({ message: "Invalid email address" }),
   password: z.string().min(5).max(50),
   first_name: z.string().min(3).max(50),
+  company_name: z.string().min(3).max(50),
 });
 
 function SignUp() {
@@ -30,10 +31,12 @@ function SignUp() {
       email: "",
       password: "",
       first_name: "",
+      company_name: "",
     },
   });
 
   function onSubmit(values: z.infer<typeof formSchema>) {
+    console.log("values: ", values);
     axiosInstance
       .post("api/v1/users/", values)
       .then((data) => {
@@ -86,6 +89,19 @@ function SignUp() {
                   <FormLabel className="text-left">Password</FormLabel>
                   <FormControl>
                     <Input placeholder="********" type="password" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="company_name"
+              render={({ field }) => (
+                <FormItem className="text-left">
+                  <FormLabel>Company Name</FormLabel>
+                  <FormControl>
+                    <Input placeholder="Ex. Microsoft" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>

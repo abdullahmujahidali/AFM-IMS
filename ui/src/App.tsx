@@ -12,9 +12,11 @@ import DashboardLayout from "./layouts/DashboardLayout";
 import PublicViewLayout from "./layouts/PublicViewLayout";
 import SignIn from "./views/Auth/Signin";
 import SignUp from "./views/Auth/Signup";
-import Dashboard from "./views/Dashboard/Dashboard";
+import Dashboard from "./views/Customer/Customer";
 import Landing from "./views/Landing/Landing";
 import ProductsView from "./views/Products/Products";
+import SettingsView from "./views/Settings/Settings";
+import NewLayout from "./components/ui/NewLayout";
 
 const router = createBrowserRouter([
   {
@@ -49,6 +51,43 @@ const router = createBrowserRouter([
           {
             path: "",
             element: <Dashboard />,
+          },
+        ],
+      },
+      {
+        path: "products",
+        children: [
+          {
+            path: "",
+            element: <ProductsView />,
+          },
+        ],
+      },
+    ],
+  },
+  {
+    path: "/settings",
+    element: <DashboardLayout />,
+    children: [
+      {
+        path: "",
+        element: <Navigate to="/settings/company" replace />,
+      },
+      {
+        path: "company",
+        children: [
+          {
+            path: "",
+            element: <SettingsView />,
+          },
+        ],
+      },
+      {
+        path: "new",
+        children: [
+          {
+            path: "",
+            element: <NewLayout />,
           },
         ],
       },

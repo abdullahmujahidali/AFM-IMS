@@ -10,6 +10,8 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@headlessui/react": "^2.1.2",
+    "@heroicons/react": "^2.1.5",
     "@hookform/resolvers": "^3.9.0",
     "@mantine/charts": "^7.11.2",
     "@mantine/core": "^7.11.2",
@@ -43,6 +45,7 @@
     "cmdk": "^1.0.0",
     "date-fns": "^3.6.0",
     "dayjs": "^1.11.12",
+    "heroicons": "^2.1.5",
     "lucide-react": "^0.414.0",
     "next-themes": "^0.3.0",
     "react": "^18.3.1",

@@ -68,7 +68,8 @@ export function DataTableDemo({ data, columns, type }) {
   });
 
   return (
-    <div className="w-full">
+    <div>
+      <h1 className="">{type} View</h1>
       <div className="flex items-center py-4">
         <Input
           placeholder="Filter name..."
@@ -169,10 +170,9 @@ export function DataTableDemo({ data, columns, type }) {
         </Table>
       </div>
       <div className="flex items-center justify-end space-x-2 py-4">
-        <div className="flex-1 text-sm text-muted-foreground">
-          {table.getFilteredSelectedRowModel().rows.length} of{" "}
-          {table.getFilteredRowModel().rows.length} row(s) selected.
-        </div>
+        <div className="flex-1 text-sm "></div>
+        {table.getFilteredSelectedRowModel().rows.length} of{" "}
+        {table.getFilteredRowModel().rows.length} row(s) selected.
         <div className="space-x-2">
           <Button
             variant="outline"
