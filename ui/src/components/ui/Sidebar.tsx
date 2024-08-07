@@ -43,8 +43,8 @@ export default function Sidebar({
       current: currentPath.startsWith("/dashboard/products"),
     },
     {
-      name: "Activity",
-      href: "/dashboard/products/",
+      name: "Sales",
+      href: "/dashboard/sales/",
       icon: SignalIcon,
       current: false,
     },

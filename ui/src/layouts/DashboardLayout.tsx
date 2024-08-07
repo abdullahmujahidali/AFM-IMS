@@ -8,6 +8,10 @@ export default function DashboardLayout() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const { data, isLoading } = useSWR("/api/v1/users/me/");
 
+  if (isLoading) {
+    return <div />;
+  }
+
   return data && data?.company?.status ? (
     <div className="flex bg-white">
       <Sidebar
@@ -47,7 +51,7 @@ export default function DashboardLayout() {
           Your company is not activated yet!
         </h1>
         <p className="mt-6 text-base leading-7 text-gray-600">
-          Contact to the support to solve your issue.
+          Contact support to solve your issue.
         </p>
         <div className="mt-4 flex items-center justify-center gap-x-6">
           <a

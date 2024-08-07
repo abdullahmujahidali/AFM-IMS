@@ -53,6 +53,7 @@ INSTALLED_APPS = [
     "products",
     "customer",
     "company",
+    "sale",
     "usercompanyrelation",
 ]
 

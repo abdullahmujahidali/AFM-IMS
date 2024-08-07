@@ -1,3 +1,4 @@
+import axiosInstance from "@/axiosInstance";
 import { Button } from "@/components/ui/button";
 import { DataTableDemo } from "@/components/ui/DataTable";
 import {
@@ -8,15 +9,55 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import { useState } from "react";
+
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import "react-quill/dist/quill.snow.css";
+import { toast, Toaster } from "sonner";
 import useSWR from "swr";
+import { z } from "zod";
+
+const formSchema = z.object({
+  name: z.string().min(3).max(50),
+  phone_number: z.string().min(11).max(13),
+});
 
 function CustomerView() {
-  const { data, error, isLoading } = useSWR("/api/v1/sales/customers/");
+  const { data, error, mutate, isLoading } = useSWR("/api/v1/customers/");
+  const [open, setOpen] = useState(false);
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      name: "",
+      phone_number: "",
+    },
+  });
 
-  if (isLoading) return <div>Loading...</div>;
-  if (error) return <div>Error loading data</div>;
+  function onSubmit(values: z.infer<typeof formSchema>) {
+    const body_data = {
+      ...values,
+    };
+    axiosInstance
+      .post("api/v1/customers/", body_data)
+      .then((data) => {
+        toast.success(`Customer ${data?.data?.name} saved!`);
+        setOpen(false);
+        mutate();
+      })
+      .catch(() => {
+        toast.error("Something went wrong!");
+      });
+  }
 
   const columns = [
     { accessorKey: "name", header: "Name" },
@@ -25,51 +66,57 @@ function CustomerView() {
     { accessorKey: "modified_at", header: "Modified At" },
   ];
 
+  if (isLoading) return <div>Loading...</div>;
+  if (error) return <div>Error loading data</div>;
+
   return (
-    <div className="mx-auto max-w-7xl pt-16 lg:flex lg:gap-x-16 lg:px-8">
-      <div className="flex-1">
-        <Dialog>
-          <DataTableDemo
-            data={data.results}
-            columns={columns}
-            type="Customer"
-          />
-          <DialogContent className="sm:max-w-[425px]">
-            <DialogHeader>
-              <DialogTitle>Edit profile</DialogTitle>
-              <DialogDescription>
-                Make changes to your profile here. Click save when you're done.
-              </DialogDescription>
-            </DialogHeader>
-            <div className="grid gap-4 py-4">
-              <div className="grid grid-cols-4 items-center gap-4">
-                <Label htmlFor="name" className="text-right">
-                  Name
-                </Label>
-                <Input
-                  id="name"
-                  defaultValue="Pedro Duarte"
-                  className="col-span-3"
-                />
-              </div>
-              <div className="grid grid-cols-4 items-center gap-4">
-                <Label htmlFor="username" className="text-right">
-                  Username
-                </Label>
-                <Input
-                  id="username"
-                  defaultValue="@peduarte"
-                  className="col-span-3"
-                />
-              </div>
-            </div>
-            <DialogFooter>
-              <Button type="submit">Save changes</Button>
-            </DialogFooter>
-          </DialogContent>
-        </Dialog>
-      </div>
-    </div>
+    <Dialog open={open} onOpenChange={setOpen}>
+      <DataTableDemo data={data.results} columns={columns} type="Customer" />
+      <DialogContent className="sm:max-w-[425px]">
+        <DialogHeader>
+          <DialogTitle>Add a Customer</DialogTitle>
+          <DialogDescription>Add a new customer.</DialogDescription>
+        </DialogHeader>
+
+        <div className="grid gap-2 md:gap-4 py-1 md:py-4">
+          <Form {...form}>
+            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-2">
+              <FormField
+                control={form.control}
+                name="name"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Name</FormLabel>
+                    <FormControl>
+                      <Input placeholder="John Doe" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="phone_number"
+                render={({ field }) => (
+                  <FormItem className="text-left">
+                    <FormLabel>Phone Number</FormLabel>
+                    <FormControl>
+                      <Input type="tel" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <DialogFooter>
+                <Toaster richColors />
+                <Button type="submit">Add a Customer</Button>
+              </DialogFooter>
+            </form>
+          </Form>
+        </div>
+      </DialogContent>
+    </Dialog>
   );
 }
 

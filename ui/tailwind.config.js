@@ -17,6 +17,9 @@ module.exports = {
       },
     },
     extend: {
+      animation: {
+        spin: 'spin 1s linear infinite',
+      },
       colors: {
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",

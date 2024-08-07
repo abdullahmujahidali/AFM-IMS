@@ -8,6 +8,7 @@ import {
 import { SWRConfig } from "swr";
 import "./App.css";
 import axiosInstance from "./axiosInstance";
+import NewLayout from "./components/ui/NewLayout";
 import DashboardLayout from "./layouts/DashboardLayout";
 import PublicViewLayout from "./layouts/PublicViewLayout";
 import SignIn from "./views/Auth/Signin";
@@ -15,8 +16,8 @@ import SignUp from "./views/Auth/Signup";
 import Dashboard from "./views/Customer/Customer";
 import Landing from "./views/Landing/Landing";
 import ProductsView from "./views/Products/Products";
+import SalesView from "./views/Sales/Sales";
 import SettingsView from "./views/Settings/Settings";
-import NewLayout from "./components/ui/NewLayout";
 
 const router = createBrowserRouter([
   {
@@ -60,6 +61,15 @@ const router = createBrowserRouter([
           {
             path: "",
             element: <ProductsView />,
+          },
+        ],
+      },
+      {
+        path: "sales",
+        children: [
+          {
+            path: "",
+            element: <SalesView />,
           },
         ],
       },

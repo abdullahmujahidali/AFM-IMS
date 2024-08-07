@@ -8,7 +8,7 @@ class Product(ID, Dates, Name):
     product_type = models.CharField(
         max_length=20,
         choices=[
-            ("FRAME", "Trunk Frame"),
+            ("TRUNK", "Trunk Frame"),
             ("DRUM", "Drum Frame"),
             ("COOLER", "Cooler Frame"),
             ("RING", "Ring Frame"),

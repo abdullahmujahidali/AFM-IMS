@@ -1,5 +1,3 @@
-"use client";
-
 import {
   ColumnFiltersState,
   SortingState,
@@ -19,6 +17,7 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import { format, parseISO } from "date-fns";
 import { ChevronDown, CirclePlusIcon } from "lucide-react";
 import * as React from "react";
 
@@ -66,6 +65,10 @@ export function DataTableDemo({ data, columns, type }) {
       rowSelection,
     },
   });
+
+  const formatDate = (dateString: string) => {
+    return format(parseISO(dateString), "MMMM dd, yyyy h:mm a");
+  };
 
   return (
     <div>
@@ -148,10 +151,13 @@ export function DataTableDemo({ data, columns, type }) {
                 >
                   {row.getVisibleCells().map((cell) => (
                     <TableCell key={cell.id}>
-                      {flexRender(
-                        cell.column.columnDef.cell,
-                        cell.getContext()
-                      )}
+                      {cell.column.id === "created_at" ||
+                      cell.column.id === "modified_at"
+                        ? formatDate(cell.getValue() as string)
+                        : flexRender(
+                            cell.column.columnDef.cell,
+                            cell.getContext()
+                          )}
                     </TableCell>
                   ))}
                 </TableRow>
