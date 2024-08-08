@@ -43,10 +43,6 @@ const formSchema = z.object({
   description: z.string(),
 });
 
-function classNames(...classes) {
-  return classes.filter(Boolean).join(" ");
-}
-
 function ProductsView() {
   const [value, setValue] = useState("");
   const { data, error, isLoading } = useSWR("/api/v1/products/");

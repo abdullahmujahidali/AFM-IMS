@@ -18,6 +18,7 @@ import Landing from "./views/Landing/Landing";
 import ProductsView from "./views/Products/Products";
 import SalesView from "./views/Sales/Sales";
 import SettingsView from "./views/Settings/Settings";
+import CreateSale from "./views/Sales/CreateSale/CreateSale";
 
 const router = createBrowserRouter([
   {
@@ -71,6 +72,10 @@ const router = createBrowserRouter([
             path: "",
             element: <SalesView />,
           },
+          {
+            path: "create",
+            element: <CreateSale />,
+          }
         ],
       },
     ],

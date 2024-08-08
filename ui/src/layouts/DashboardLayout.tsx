@@ -1,12 +1,15 @@
+import { Button } from "@/components/ui/button";
 import Sidebar from "@/components/ui/Sidebar";
 import { Bars3Icon } from "@heroicons/react/20/solid";
+import { CirclePlusIcon } from "lucide-react";
 import { Suspense, useState } from "react";
-import { Outlet } from "react-router-dom";
+import { Outlet, useNavigate } from "react-router-dom";
 import useSWR from "swr";
 
 export default function DashboardLayout() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const { data, isLoading } = useSWR("/api/v1/users/me/");
+  const navigate = useNavigate();
 
   if (isLoading) {
     return <div />;
@@ -34,6 +37,14 @@ export default function DashboardLayout() {
             <div className="flex flex-1"></div>
             <div className="ml-4 flex items-center lg:ml-6"></div>
           </div>
+          <Button
+            className="mx-4 my-3 flex gap-2"
+            onClick={() => navigate("sales/create")}
+            variant="outline"
+          >
+            <CirclePlusIcon />
+            Add Sale
+          </Button>
         </div>
         <main className="relative flex-1 p-4 lg:ml-64 xl:ml-72">
           <Suspense fallback={<span />}>

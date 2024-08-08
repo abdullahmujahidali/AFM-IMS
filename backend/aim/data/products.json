@@ -1,7 +1,7 @@
 [
   {
     "name": "D-23x23",
-    "price": 0.0,
+    "price": 110.32,
     "product_type": "DRUM",
     "dimensions": "23 x 23",
     "size": "N/A",
@@ -9,7 +9,7 @@
   },
   {
     "name": "D-25x25",
-    "price": 0.0,
+    "price": 210.32,
     "product_type": "DRUM",
     "dimensions": "25 x 25",
     "size": "N/A",
@@ -17,7 +17,7 @@
   },
   {
     "name": "D-25½ x 25½",
-    "price": 0.0,
+    "price": 35.0,
     "product_type": "DRUM",
     "dimensions": "25 ½ x 25 ½",
     "size": "N/A",
@@ -25,7 +25,7 @@
   },
   {
     "name": "D-29x29",
-    "price": 0.0,
+    "price": 44.0,
     "product_type": "DRUM",
     "dimensions": "29 x 29",
     "size": "N/A",
@@ -33,7 +33,7 @@
   },
   {
     "name": "D-30x30",
-    "price": 0.0,
+    "price": 32.0,
     "product_type": "DRUM",
     "dimensions": "30 x 30",
     "size": "N/A",
@@ -41,7 +41,7 @@
   },
   {
     "name": "D-31x31",
-    "price": 0.0,
+    "price": 122.0,
     "product_type": "DRUM",
     "dimensions": "31 x 31",
     "size": "N/A",
@@ -49,7 +49,7 @@
   },
   {
     "name": "D-34x34",
-    "price": 0.0,
+    "price": 98.0,
     "product_type": "DRUM",
     "dimensions": "34 x 34",
     "size": "N/A",
@@ -57,7 +57,7 @@
   },
   {
     "name": "D-35½ x 35½",
-    "price": 0.0,
+    "price": 65.0,
     "product_type": "DRUM",
     "dimensions": "35 ½ x 35 ½",
     "size": "N/A",
@@ -65,7 +65,7 @@
   },
   {
     "name": "D-37½ x 37½",
-    "price": 0.0,
+    "price": 89.0,
     "product_type": "DRUM",
     "dimensions": "37 ½ x 37 ½",
     "size": "N/A",
@@ -73,7 +73,7 @@
   },
   {
     "name": "D-32x32",
-    "price": 0.0,
+    "price": 910.32,
     "product_type": "DRUM",
     "dimensions": "32 x 32",
     "size": "N/A",
@@ -81,7 +81,7 @@
   },
   {
     "name": "T-59 1¼ x 35",
-    "price": 0.0,
+    "price": 213.0,
     "product_type": "TRUNK",
     "dimensions": "59 1¼ x 35",
     "size": "9.ft Height",
@@ -89,7 +89,7 @@
   },
   {
     "name": "T-60 1¼ x 35",
-    "price": 0.0,
+    "price": 324.0,
     "product_type": "TRUNK",
     "dimensions": "60 1¼ x 35",
     "size": "9.ft Height",
@@ -97,7 +97,7 @@
   },
   {
     "name": "T-59 1¼ x 35",
-    "price": 0.0,
+    "price": 309.0,
     "product_type": "TRUNK",
     "dimensions": "59 1¼ x 35",
     "size": "7.ft Height",
@@ -105,7 +105,7 @@
   },
   {
     "name": "T-60 1¼ x 36½",
-    "price": 0.0,
+    "price": 805.0,
     "product_type": "TRUNK",
     "dimensions": "60 1¼ x 36½",
     "size": "9.ft Height",
@@ -113,7 +113,7 @@
   },
   {
     "name": "T-66 1¼ x 36",
-    "price": 0.0,
+    "price": 10.32,
     "product_type": "TRUNK",
     "dimensions": "66 1¼ x 36",
     "size": "9.ft Height",
@@ -121,7 +121,7 @@
   },
   {
     "name": "T-71 1¼ x 35",
-    "price": 0.0,
+    "price": 10.32,
     "product_type": "TRUNK",
     "dimensions": "71 1¼ x 35",
     "size": "9.ft Height",
@@ -129,7 +129,7 @@
   },
   {
     "name": "T-72 1¼ x 36",
-    "price": 0.0,
+    "price": 10.32,
     "product_type": "TRUNK",
     "dimensions": "72 1¼ x 36",
     "size": "9.ft Height",
@@ -137,7 +137,7 @@
   },
   {
     "name": "T-71 1¼ x 35",
-    "price": 0.0,
+    "price": 10.32,
     "product_type": "TRUNK",
     "dimensions": "71 1¼ x 35",
     "size": "7.ft Height",
@@ -145,7 +145,7 @@
   },
   {
     "name": "T-72 1¼ x 36½",
-    "price": 0.0,
+    "price": 10.32,
     "product_type": "TRUNK",
     "dimensions": "72 1¼ x 36½",
     "size": "9.ft Height",
@@ -153,7 +153,7 @@
   },
   {
     "name": "T-72 1¼ x 37",
-    "price": 0.0,
+    "price": 10.32,
     "product_type": "TRUNK",
     "dimensions": "72 1¼ x 37",
     "size": "9.ft Height",
@@ -161,7 +161,7 @@
   },
   {
     "name": "T-72 1¼ x 35",
-    "price": 0.0,
+    "price": 10.32,
     "product_type": "TRUNK",
     "dimensions": "72 1¼ x 35",
     "size": "9.ft Height",
@@ -169,7 +169,7 @@
   },
   {
     "name": "T-72 1½ x 36",
-    "price": 0.0,
+    "price": 10.32,
     "product_type": "TRUNK",
     "dimensions": "72 1½ x 36",
     "size": "12.ft Height",
@@ -177,7 +177,7 @@
   },
   {
     "name": "T-60 1½ x 36",
-    "price": 0.0,
+    "price": 10.32,
     "product_type": "TRUNK",
     "dimensions": "60 1½ x 36",
     "size": "12.ft Height",
@@ -185,7 +185,7 @@
   },
   {
     "name": "T-52x30",
-    "price": 0.0,
+    "price": 10.32,
     "product_type": "TRUNK",
     "dimensions": "52 x 30",
     "size": "1 inch 7.ft height",
@@ -193,7 +193,7 @@
   },
   {
     "name": "T-47x27",
-    "price": 0.0,
+    "price": 10.32,
     "product_type": "TRUNK",
     "dimensions": "47 x 27",
     "size": "1 inch 7.ft height",
@@ -201,7 +201,7 @@
   },
   {
     "name": "T-16x16",
-    "price": 0.0,
+    "price": 10.32,
     "product_type": "TRUNK",
     "dimensions": "16 x 16",
     "size": "1 Aata Box",
@@ -209,7 +209,7 @@
   },
   {
     "name": "T-17½ x 17½",
-    "price": 0.0,
+    "price": 10.32,
     "product_type": "TRUNK",
     "dimensions": "17½ x 17½",
     "size": "N/A",
@@ -217,7 +217,7 @@
   },
   {
     "name": "T-18x18",
-    "price": 0.0,
+    "price": 10.32,
     "product_type": "TRUNK",
     "dimensions": "18 x 18",
     "size": "N/A",
@@ -225,7 +225,7 @@
   },
   {
     "name": "R-6ft set",
-    "price": 0.0,
+    "price": 10.32,
     "product_type": "RING",
     "dimensions": "6 mm 17 gauge",
     "size": "N/A",
@@ -233,7 +233,7 @@
   },
   {
     "name": "R-8ft set",
-    "price": 0.0,
+    "price": 10.32,
     "product_type": "RING",
     "dimensions": "6 mm 17 gauge",
     "size": "N/A",
@@ -241,7 +241,7 @@
   },
   {
     "name": "R-9ft set",
-    "price": 0.0,
+    "price": 10.32,
     "product_type": "RING",
     "dimensions": "6 mm 17 gauge",
     "size": "N/A",
@@ -249,7 +249,7 @@
   },
   {
     "name": "R-10ft set",
-    "price": 0.0,
+    "price": 10.32,
     "product_type": "RING",
     "dimensions": "6 mm 17 gauge",
     "size": "N/A",
@@ -257,7 +257,7 @@
   },
   {
     "name": "R-11ft set",
-    "price": 0.0,
+    "price": 10.32,
     "product_type": "RING",
     "dimensions": "6 mm 17 gauge",
     "size": "N/A",
@@ -265,7 +265,7 @@
   },
   {
     "name": "R-12ft set",
-    "price": 0.0,
+    "price": 10.32,
     "product_type": "RING",
     "dimensions": "6 mm 17 gauge",
     "size": "N/A",
@@ -273,7 +273,7 @@
   },
   {
     "name": "R-13ft set",
-    "price": 0.0,
+    "price": 10.32,
     "product_type": "RING",
     "dimensions": "6 mm 17 gauge",
     "size": "N/A",
@@ -281,7 +281,7 @@
   },
   {
     "name": "A-6ft set",
-    "price": 0.0,
+    "price": 10.32,
     "product_type": "ANGLE",
     "dimensions": "4 mm 17 gauge",
     "size": "N/A",
@@ -289,7 +289,7 @@
   },
   {
     "name": "A-8ft set",
-    "price": 0.0,
+    "price": 10.32,
     "product_type": "ANGLE",
     "dimensions": "4 mm 17 gauge",
     "size": "N/A",
@@ -297,7 +297,7 @@
   },
   {
     "name": "A-9ft set",
-    "price": 0.0,
+    "price": 10.32,
     "product_type": "ANGLE",
     "dimensions": "4 mm 17 gauge",
     "size": "N/A",
@@ -305,7 +305,7 @@
   },
   {
     "name": "A-10ft set",
-    "price": 0.0,
+    "price": 10.32,
     "product_type": "ANGLE",
     "dimensions": "4 mm 17 gauge",
     "size": "N/A",
@@ -313,7 +313,7 @@
   },
   {
     "name": "A-11ft set",
-    "price": 0.0,
+    "price": 10.32,
     "product_type": "ANGLE",
     "dimensions": "4 mm 17 gauge",
     "size": "N/A",
@@ -321,7 +321,7 @@
   },
   {
     "name": "A-12ft set",
-    "price": 0.0,
+    "price": 10.32,
     "product_type": "ANGLE",
     "dimensions": "4 mm 17 gauge",
     "size": "N/A",

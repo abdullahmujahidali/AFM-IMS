@@ -38,7 +38,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 
-export function DataTableDemo({ data, columns, type }) {
+export function DataTableDemo({ data, columns, type, hidden = false }) {
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     []
@@ -88,18 +88,27 @@ export function DataTableDemo({ data, columns, type }) {
               Columns <ChevronDown className="ml-2 h-4 w-4" />
             </Button>
           </DropdownMenuTrigger>
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <SheetTrigger>
-                <Button size="icon" variant="ghost" className="ml-2">
-                  <CirclePlusIcon />
-                </Button>
-              </SheetTrigger>
-            </TooltipTrigger>
-            <TooltipContent>
-              <p>Add a new {type}</p>
-            </TooltipContent>
-          </Tooltip>
+          {hidden ? (
+            <></>
+          ) : (
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <SheetTrigger>
+                  <Button
+                    hidden={true}
+                    size="icon"
+                    variant="ghost"
+                    className="ml-2"
+                  >
+                    <CirclePlusIcon />
+                  </Button>
+                </SheetTrigger>
+              </TooltipTrigger>
+              <TooltipContent>
+                <p>Add a new {type}</p>
+              </TooltipContent>
+            </Tooltip>
+          )}
 
           <DropdownMenuContent align="end">
             {table
