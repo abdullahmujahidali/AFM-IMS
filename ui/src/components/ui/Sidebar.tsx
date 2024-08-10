@@ -107,7 +107,7 @@ export default function Sidebar({
                             className={classNames(
                               item.current
                                 ? "bg-gray-200 text-black"
-                                : "text-black hover:bg-gray-200 hover:text-white",
+                                : "text-black  hover:bg-gray-600 hover:text-white",
                               "group flex gap-x-3 rounded-md p-2 text-sm font-semibold leading-6"
                             )}
                           >
@@ -125,7 +125,7 @@ export default function Sidebar({
                   <li className="-mx-6 mt-auto">
                     <a
                       href="#"
-                      className="flex items-center gap-x-4 px-6 py-3 text-sm font-semibold leading-6 text-black hover:bg-gray-400"
+                      className="flex items-center gap-x-4 px-6 py-3 text-sm font-semibold leading-6 text-black   hover:bg-gray-600"
                     >
                       <img
                         alt=""
@@ -133,7 +133,10 @@ export default function Sidebar({
                         className="h-8 w-8 rounded-full bg-gray-800"
                       />
                       <span className="sr-only">Your profile</span>
-                      <span aria-hidden="true" className="text-black">
+                      <span
+                        aria-hidden="true"
+                        className="text-black hover:text-white"
+                      >
                         {isLoading ? (
                           <Skeleton className="h-4 w-[120px]" />
                         ) : (
@@ -149,7 +152,7 @@ export default function Sidebar({
         </div>
       </Dialog>
 
-      <div className="hidden xl:fixed xl:inset-y-0 xl:z-50 xl:flex xl:w-64 xl:flex-col">
+      <div className="hidden lg:fixed lg:inset-y-0 lg:z-50 lg:flex lg:w-64 lg:flex-col">
         <div className="flex grow flex-col gap-y-5 overflow-y-auto bg-white border border-gray-200 px-6 ring-1 ring-white/5">
           <div className="flex h-16 shrink-0 items-center">
             <img alt="Your Company" src="/logo2.svg" className="h-8 w-auto" />

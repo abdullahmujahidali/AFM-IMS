@@ -174,7 +174,7 @@ function CreateSale() {
   };
 
   return (
-    <div className="max-w-2xl mx-auto p-4">
+    <div className="max-w-2xl p-4">
       <div className="flex flex-col sm:flex-row items-start sm:items-center sm:justify-between">
         <h1 className="text-md font-bold tracking-tight text-gray-900 sm:text-2xl">
           {saleId ? "Edit Sale" : "Create a new sale!"}
@@ -230,11 +230,9 @@ function CreateSale() {
             )}
           />
 
-          {/* Products fields */}
           <div className="space-y-4">
             {fields.map((field, index) => (
               <div key={field.id} className="flex items-center space-x-2">
-                {/* Product field */}
                 <FormField
                   control={form.control}
                   name={`products.${index}.product`}
@@ -278,7 +276,7 @@ function CreateSale() {
                     <FormItem className="w-24">
                       <FormLabel>Quantity</FormLabel>
                       <FormControl>
-                        <Input type="number" {...field} />
+                        <Input min={2} max={10} type="number" {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -293,7 +291,7 @@ function CreateSale() {
                     <FormItem className="w-24">
                       <FormLabel>Price</FormLabel>
                       <FormControl>
-                        <Input type="text" {...field} readOnly />
+                        <Input type="text" {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
