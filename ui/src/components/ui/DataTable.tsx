@@ -63,6 +63,7 @@ export function DataTableDemo({
         header: ({ table }) => (
           <Checkbox
             checked={table.getIsAllPageRowsSelected()}
+            onClick={(e) => e.stopPropagation()}
             onCheckedChange={(value) =>
               table.toggleAllPageRowsSelected(!!value)
             }
@@ -72,6 +73,7 @@ export function DataTableDemo({
         cell: ({ row }) => (
           <Checkbox
             checked={row.getIsSelected()}
+            onClick={(e) => e.stopPropagation()}
             onCheckedChange={(value) => row.toggleSelected(!!value)}
             aria-label="Select row"
           />
@@ -79,6 +81,23 @@ export function DataTableDemo({
         enableSorting: false,
         enableHiding: false,
       },
+      // ...columns.map((column) => ({
+      //   ...column,
+      //   header: ({ column }) => {
+      //     console.log("header: ", column);
+      //     return (
+      //       <Button
+      //         variant="ghost"
+      //         onClick={() =>
+      //           column.toggleSorting(column.getIsSorted() === "asc")
+      //         }
+      //       >
+      //         {column.id}
+      //         <ArrowUpDown className="ml-2 h-4 w-4" />
+      //       </Button>
+      //     );
+      //   },
+      // })),
       ...columns,
       {
         id: "actions",

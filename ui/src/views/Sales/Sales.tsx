@@ -23,16 +23,16 @@ function SalesView() {
 
   const columns = useMemo(
     () => [
-      { accessorKey: "created_at", header: "Created" },
-      { accessorKey: "customer.name", header: "Customer" },
       {
         accessorKey: "created_at",
-        header: "Created At",
+        header: "Date",
         cell: ({ row }) => formatDate(row.getValue("created_at")),
         sortingFn: "datetime",
       },
-      { accessorKey: "customer.phone_number", header: "Phone Number" },
-      { accessorKey: "total_amount", header: "Total Amount" },
+      { accessorKey: "customer.name", header: "Customer" },
+
+      { accessorKey: "customer.phone_number", header: "Contact" },
+      { accessorKey: "total_amount", header: "Amount" },
       { accessorKey: "customer.balance", header: "Customer Balance" },
       { accessorKey: "comments", header: "Comments" },
     ],
