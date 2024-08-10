@@ -6,6 +6,7 @@ from products.models import Product
 
 class Customer(ID, Dates, Name):
     phone_number = models.CharField(max_length=15, validators=[phone_validation])
+    balance = models.DecimalField(max_digits=10, default=0.0, decimal_places=2)
 
 
 class Order(ID, Dates):

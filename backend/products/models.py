@@ -1,6 +1,5 @@
-from django.db import models
-
 from aim.abstract_models import ID, Dates, Name
+from django.db import models
 
 
 class Product(ID, Dates, Name):
@@ -19,6 +18,7 @@ class Product(ID, Dates, Name):
     dimensions = models.CharField(
         max_length=50, default="Not specified", help_text="Dimensions of the product"
     )
+    stock_quantity = models.IntegerField(default=0)
     size = models.CharField(
         max_length=50, default="Not specified", help_text="Size of the product"
     )

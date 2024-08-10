@@ -79,6 +79,7 @@ function ProductsView() {
     { accessorKey: "product_type", header: "Product Type" },
     { accessorKey: "dimensions", header: "Dimensions" },
     { accessorKey: "size", header: "Size" },
+    { accessorKey: "stock_quantity", header: "Stock" },
     { accessorKey: "description", header: "Description" },
   ];
 

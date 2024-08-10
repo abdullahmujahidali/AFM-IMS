@@ -56,6 +56,7 @@ INSTALLED_APPS = [
     "sale",
     "usercompanyrelation",
 ]
+ENVIRONMENT = "dev"
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",

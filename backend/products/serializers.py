@@ -11,6 +11,7 @@ class ProductSerializer(serializers.ModelSerializer):
             "price",
             "product_type",
             "dimensions",
+            "stock_quantity",
             "size",
             "description",
         ]

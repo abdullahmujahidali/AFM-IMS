@@ -5,25 +5,43 @@ import {
   SheetHeader,
   SheetTitle,
 } from "@/components/ui/sheet";
+import { formatDate } from "date-fns";
+import { useMemo } from "react";
 import "react-quill/dist/quill.snow.css";
+import { useNavigate } from "react-router-dom";
 import useSWR from "swr";
 
 function SalesView() {
   const { data, error, isLoading } = useSWR("/api/v1/sales/");
   const { data: customers } = useSWR("/api/v1/customers/");
+  const navigate = useNavigate();
   const { data: products } = useSWR("/api/v1/products/");
 
   console.log("customers: ", customers);
   console.log("products: ", products);
+  console.log("data: ", data);
 
-  const columns = [
-    { accessorKey: "name", header: "Name" },
-    { accessorKey: "price", header: "Price" },
-    { accessorKey: "product_type", header: "Product Type" },
-    { accessorKey: "dimensions", header: "Dimensions" },
-    { accessorKey: "size", header: "Size" },
-    { accessorKey: "description", header: "Description" },
-  ];
+  const columns = useMemo(
+    () => [
+      { accessorKey: "created_at", header: "Created" },
+      { accessorKey: "customer.name", header: "Customer" },
+      {
+        accessorKey: "created_at",
+        header: "Created At",
+        cell: ({ row }) => formatDate(row.getValue("created_at")),
+        sortingFn: "datetime",
+      },
+      { accessorKey: "customer.phone_number", header: "Phone Number" },
+      { accessorKey: "total_amount", header: "Total Amount" },
+      { accessorKey: "customer.balance", header: "Customer Balance" },
+      { accessorKey: "comments", header: "Comments" },
+    ],
+    []
+  );
+
+  const handleRowClick = (product) => {
+    navigate(`/sales/${product.id}`);
+  };
 
   if (isLoading) return <div>Loading...</div>;
   if (error) return <div>Error loading data</div>;
@@ -32,9 +50,9 @@ function SalesView() {
     <Sheet>
       <DataTableDemo
         data={data.results}
-        hidden={true}
         columns={columns}
-        type="Sale"
+        type="Product"
+        onRowClick={handleRowClick}
       />
       <SheetContent>
         <SheetHeader>

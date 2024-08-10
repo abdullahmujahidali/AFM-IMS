@@ -26,6 +26,7 @@ class Command(BaseCommand):
                     "price": item.get("price", 0.0),
                     "product_type": item.get("product_type", "FRAME"),
                     "dimensions": item.get("dimensions", "Not specified"),
+                    "stock_quantity": item.get("stock_quantity", 0),
                     "size": item.get("size", "Not specified"),
                     "description": item.get("description", ""),
                 },

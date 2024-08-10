@@ -1,0 +1,28 @@
+[
+  {
+    "name": "Abubakar",
+    "balance": "2100",
+    "phone_number": "+923334165554"
+  },
+
+  {
+    "name": "Zeenia",
+    "balance": "9000",
+    "phone_number": "+923219437619"
+  },
+  {
+    "name": "Abdullah",
+    "balance": "-32432.9",
+    "phone_number": "+923229437619"
+  },
+  {
+    "name": "Mujahid",
+    "balance": "1004",
+    "phone_number": "+923334201095"
+  },
+  {
+    "name": "Rana Tanveer",
+    "balance": "-9800",
+    "phone_number": "+923305457457"
+  }
+]

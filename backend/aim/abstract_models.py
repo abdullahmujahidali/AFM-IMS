@@ -1,9 +1,8 @@
 from uuid import uuid4
 
+from aim.validations import order_validation
 from django.db import models
 from django.utils import timezone
-
-from aim.validations import order_validation
 
 
 class ID(models.Model):

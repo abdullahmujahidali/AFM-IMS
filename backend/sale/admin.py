@@ -27,6 +27,7 @@ class SaleProductAdmin(admin.ModelAdmin):
     list_display = (
         "sale_id",
         "product_name",
+        "id",
         "quantity",
         "price",
     )
