@@ -1,17 +1,37 @@
+from customer.serializers import (
+    CustomerSerializer,
+    OrderSerializer,
+    TransactionSerializer,
+)
 from rest_framework import status, viewsets
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework_simplejwt.authentication import JWTAuthentication
 
 from .models import Customer, Order, Transaction
-from .serializers import CustomerSerializer, OrderSerializer, TransactionSerializer
 
 
 class CustomerViewSet(viewsets.ModelViewSet):
     queryset = Customer.objects.all()
     serializer_class = CustomerSerializer
-    authentication_classes = [JWTAuthentication]
-    permission_classes = [IsAuthenticated]
+
+    def list(self, request, *args, **kwargs):
+        # Get the standard response from the parent class method
+        response = super().list(request, *args, **kwargs)
+
+        # Calculate the total amount owed
+        total_amount_owed = sum(
+            customer.amount_owed for customer in self.get_queryset()
+        )
+
+        # Add the total amount owed and count to the response data
+        response.data = {
+            "count": response.data["count"],  # Add the count back to the response
+            "total_amount_owed": total_amount_owed,
+            "results": response.data["results"],
+        }
+
+        return response
 
 
 class OrderViewSet(viewsets.ModelViewSet):

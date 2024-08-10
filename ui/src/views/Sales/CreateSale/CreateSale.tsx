@@ -4,6 +4,7 @@ import { ComboboxDemo } from "@/components/ui/ComboBox";
 import {
   Form,
   FormControl,
+  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -91,7 +92,7 @@ function CreateSale() {
         balance: parseFloat(saleObject.customer.balance),
       });
 
-      saleObject.products.forEach((product, index) => {
+      saleObject.products.forEach((product, index: number) => {
         if (index === 0) {
           form.setValue(`products.${index}.product`, product.product.id);
           form.setValue(`products.${index}.quantity`, product.quantity);
@@ -174,24 +175,32 @@ function CreateSale() {
   };
 
   return (
-    <div className="max-w-2xl p-4">
-      <div className="flex flex-col sm:flex-row items-start sm:items-center sm:justify-between">
-        <h1 className="text-md font-bold tracking-tight text-gray-900 sm:text-2xl">
+    <div className="p-4">
+      <div className="flex flex-col sm:flex-row items-start sm:items-center sm:justify-between mb-6">
+        <h1 className="text-lg font-extrabold tracking-tight text-gray-900 sm:text-4xl">
           {saleId ? "Edit Sale" : "Create a new sale!"}
         </h1>
         <div className="mt-2 sm:mt-0">
-          <p className="text-sm text-gray-600">{currentDateTime}</p>
+          <p className="text-sm sm:text-base text-gray-500">
+            {currentDateTime}
+          </p>
         </div>
       </div>
+
       {selectedCustomer && (
-        <div>
-          <h2>Customer: {selectedCustomer.name}</h2>
-          <p>Initial Balance: {selectedCustomer.balance.toFixed(2)}</p>
-          {calculatedBalance !== null && (
-            <p>New Balance: {calculatedBalance.toFixed(2)}</p>
-          )}
+        <div className="mb-8 p-4 bg-white rounded-lg shadow-md border border-gray-200">
+          <h2 className="text-md font-bold tracking-tight text-gray-800 sm:text-2xl">
+            Customer: {selectedCustomer.name}
+          </h2>
+          <p className="text-sm sm:text-base text-gray-600">
+            Initial Balance:{" "}
+            <span className="font-medium">
+              {selectedCustomer.balance.toFixed(2)}
+            </span>
+          </p>
         </div>
       )}
+
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
           {/* Customer field */}
@@ -320,36 +329,43 @@ function CreateSale() {
           >
             Add another product
           </Button>
+          <div className="flex flex-col md:flex-row w-full gap-2">
+            {/* Total Amount field */}
+            <FormField
+              control={form.control}
+              name="total_amount"
+              render={({ field }) => (
+                <FormItem className="w-full">
+                  <FormLabel>Total Amount</FormLabel>
+                  <FormControl>
+                    <Input type="text" {...field} readOnly />
+                  </FormControl>
+                  <FormDescription>
+                    Total amount of the products being purchased.
+                  </FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
 
-          {/* Total Amount field */}
-          <FormField
-            control={form.control}
-            name="total_amount"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Total Amount</FormLabel>
-                <FormControl>
-                  <Input type="text" {...field} readOnly />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
-          {/* Paying Amount field */}
-          <FormField
-            control={form.control}
-            name="paying_amount"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Paying Amount</FormLabel>
-                <FormControl>
-                  <Input type="text" {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+            {/* Paying Amount field */}
+            <FormField
+              control={form.control}
+              name="paying_amount"
+              render={({ field }) => (
+                <FormItem className="w-full">
+                  <FormLabel>Paying Amount</FormLabel>
+                  <FormControl>
+                    <Input type="text" {...field} />
+                  </FormControl>
+                  <FormDescription>
+                    Amount being payed by the user
+                  </FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
 
           {/* Comments field */}
           <FormField
@@ -370,7 +386,9 @@ function CreateSale() {
               </FormItem>
             )}
           />
-
+          {calculatedBalance !== null && (
+            <p>New Balance: {calculatedBalance.toFixed(2)}</p>
+          )}
           <Button type="submit">
             {saleId ? "Update Sale" : "Create Sale"}
           </Button>

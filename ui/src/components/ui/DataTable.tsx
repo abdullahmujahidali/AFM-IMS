@@ -166,7 +166,6 @@ export function DataTableDemo({
 
   return (
     <div>
-      <h1 className="">{type} View</h1>
       <div className="flex items-center py-4">
         <Input
           placeholder="Filter name..."
