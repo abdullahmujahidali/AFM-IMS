@@ -3,7 +3,7 @@ from django.db import models
 
 
 class Product(ID, Dates, Name):
-    price = models.DecimalField(default=0.0, max_digits=5, decimal_places=2)
+    price = models.DecimalField(default=0.0, max_digits=10, decimal_places=2)
     product_type = models.CharField(
         max_length=20,
         choices=[

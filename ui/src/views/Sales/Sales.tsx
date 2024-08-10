@@ -12,14 +12,8 @@ import { useNavigate } from "react-router-dom";
 import useSWR from "swr";
 
 function SalesView() {
-  const { data, error, isLoading } = useSWR("/api/v1/sales/");
-  const { data: customers } = useSWR("/api/v1/customers/");
+const { data, error, isLoading } = useSWR("/api/v1/sales/");
   const navigate = useNavigate();
-  const { data: products } = useSWR("/api/v1/products/");
-
-  console.log("customers: ", customers);
-  console.log("products: ", products);
-  console.log("data: ", data);
 
   const columns = useMemo(
     () => [
@@ -40,7 +34,7 @@ function SalesView() {
   );
 
   const handleRowClick = (product) => {
-    navigate(`/sales/${product.id}`);
+    navigate(`/dashboard/sales/edit/${product.id}`);
   };
 
   if (isLoading) return <div>Loading...</div>;

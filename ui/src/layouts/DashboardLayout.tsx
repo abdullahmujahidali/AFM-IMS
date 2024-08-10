@@ -39,7 +39,10 @@ export default function DashboardLayout() {
           </div>
           <Button
             className="mx-4 my-3 flex gap-2"
-            onClick={() => navigate("sales/create")}
+            onClick={() => {
+              navigate("sales/create");
+              window.location.reload();
+            }}
             variant="outline"
           >
             <CirclePlusIcon />

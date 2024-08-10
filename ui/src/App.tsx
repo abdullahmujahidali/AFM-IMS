@@ -16,9 +16,9 @@ import SignUp from "./views/Auth/Signup";
 import Dashboard from "./views/Customer/Customer";
 import Landing from "./views/Landing/Landing";
 import ProductsView from "./views/Products/Products";
+import CreateSale from "./views/Sales/CreateSale/CreateSale";
 import SalesView from "./views/Sales/Sales";
 import SettingsView from "./views/Settings/Settings";
-import CreateSale from "./views/Sales/CreateSale/CreateSale";
 
 const router = createBrowserRouter([
   {
@@ -75,7 +75,11 @@ const router = createBrowserRouter([
           {
             path: "create",
             element: <CreateSale />,
-          }
+          },
+          {
+            path: "edit/:saleId",
+            element: <CreateSale />,
+          },
         ],
       },
     ],

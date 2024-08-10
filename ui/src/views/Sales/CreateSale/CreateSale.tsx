@@ -15,7 +15,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { X } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { toast, Toaster } from "sonner";
 import useSWR from "swr";
 import { z } from "zod";
@@ -40,6 +40,7 @@ type FormValues = z.infer<typeof formSchema>;
 
 function CreateSale() {
   const navigate = useNavigate();
+  const { saleId } = useParams();
   const [currentDateTime, setCurrentDateTime] = useState<string>("");
   const [selectedCustomer, setSelectedCustomer] = useState<{
     name: string;
@@ -51,6 +52,9 @@ function CreateSale() {
   );
 
   const { data: customers } = useSWR("/api/v1/customers/");
+  const { data: saleObject } = useSWR(
+    saleId ? `/api/v1/sales/${saleId}` : null
+  );
   const { data: products } = useSWR("/api/v1/products/");
 
   const form = useForm<FormValues>({
@@ -78,6 +82,34 @@ function CreateSale() {
     const interval = setInterval(updateDateTime, 1000);
     return () => clearInterval(interval);
   }, []);
+
+  useEffect(() => {
+    if (saleObject) {
+      form.setValue("customer", saleObject.customer.id);
+      setSelectedCustomer({
+        name: saleObject.customer.name,
+        balance: parseFloat(saleObject.customer.balance),
+      });
+
+      saleObject.products.forEach((product, index) => {
+        if (index === 0) {
+          form.setValue(`products.${index}.product`, product.product.id);
+          form.setValue(`products.${index}.quantity`, product.quantity);
+          form.setValue(`products.${index}.price`, product.price);
+        } else {
+          append({
+            product: product.product.id,
+            quantity: product.quantity,
+            price: product.price,
+          });
+        }
+      });
+
+      form.setValue("total_amount", saleObject.total_amount);
+      form.setValue("comments", saleObject.comments || "");
+      setCalculatedBalance(saleObject.balance);
+    }
+  }, [saleObject, append, form]);
 
   useEffect(() => {
     const subscription = form.watch((value, { name }) => {
@@ -127,8 +159,13 @@ function CreateSale() {
     };
 
     try {
-      await axiosInstance.post("api/v1/sales/", body_data);
-      toast.success(`Sale saved!`);
+      if (saleId) {
+        await axiosInstance.put(`/api/v1/sales/${saleId}/`, body_data);
+        toast.success(`Sale updated!`);
+      } else {
+        await axiosInstance.post("/api/v1/sales/", body_data);
+        toast.success(`Sale created!`);
+      }
       navigate("/");
     } catch (error) {
       console.error("Error:", error);
@@ -140,7 +177,7 @@ function CreateSale() {
     <div className="max-w-2xl mx-auto p-4">
       <div className="flex flex-col sm:flex-row items-start sm:items-center sm:justify-between">
         <h1 className="text-md font-bold tracking-tight text-gray-900 sm:text-2xl">
-          Create a new sale!
+          {saleId ? "Edit Sale" : "Create a new sale!"}
         </h1>
         <div className="mt-2 sm:mt-0">
           <p className="text-sm text-gray-600">{currentDateTime}</p>
@@ -232,72 +269,58 @@ function CreateSale() {
                     </FormItem>
                   )}
                 />
+
                 {/* Quantity field */}
                 <FormField
                   control={form.control}
                   name={`products.${index}.quantity`}
                   render={({ field }) => (
-                    <FormItem>
+                    <FormItem className="w-24">
                       <FormLabel>Quantity</FormLabel>
                       <FormControl>
-                        <Input
-                          type="number"
-                          {...field}
-                          onChange={(e) =>
-                            field.onChange(parseInt(e.target.value))
-                          }
-                          disabled={
-                            !form.getValues(`products.${index}.product`)
-                          }
-                        />
+                        <Input type="number" {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
                   )}
                 />
+
                 {/* Price field */}
                 <FormField
                   control={form.control}
                   name={`products.${index}.price`}
                   render={({ field }) => (
-                    <FormItem>
+                    <FormItem className="w-24">
                       <FormLabel>Price</FormLabel>
                       <FormControl>
-                        <Input
-                          type="number"
-                          {...field}
-                          disabled={
-                            !form.getValues(`products.${index}.product`)
-                          }
-                        />
+                        <Input type="text" {...field} readOnly />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
                   )}
                 />
+
                 {/* Remove button */}
-                {fields.length > 1 && (
+                <div className="flex items-center justify-center mt-auto">
                   <Button
                     type="button"
+                    onClick={() => remove(index)}
                     variant="ghost"
                     size="icon"
-                    className="mt-8"
-                    onClick={() => remove(index)}
                   >
                     <X className="h-4 w-4" />
                   </Button>
-                )}
+                </div>
               </div>
             ))}
           </div>
 
-          {/* Add Product button */}
           <Button
             type="button"
-            variant="outline"
+            variant="secondary"
             onClick={() => append({ product: "", quantity: 1, price: "" })}
           >
-            Add Product
+            Add another product
           </Button>
 
           {/* Total Amount field */}
@@ -308,12 +331,7 @@ function CreateSale() {
               <FormItem>
                 <FormLabel>Total Amount</FormLabel>
                 <FormControl>
-                  <Input
-                    type="text"
-                    {...field}
-                    value={form.getValues("total_amount")}
-                    readOnly
-                  />
+                  <Input type="text" {...field} readOnly />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -335,13 +353,6 @@ function CreateSale() {
             )}
           />
 
-          {/* Display current balance */}
-          {selectedCustomer && (
-            <div className="text-bold">
-              Current Balance: {selectedCustomer.balance.toFixed(2)}
-            </div>
-          )}
-
           {/* Comments field */}
           <FormField
             control={form.control}
@@ -349,23 +360,25 @@ function CreateSale() {
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Comments</FormLabel>
-                <RichTextEditorField
-                  {...field}
-                  value={descriptionValue}
-                  onChange={(value) => {
-                    setDescriptionValue(value);
-                    field.onChange(value);
-                  }}
-                />
+                <FormControl>
+                  <RichTextEditorField
+                    value={descriptionValue}
+                    onChange={setDescriptionValue}
+                    placeholder="Add comments here"
+                    {...field}
+                  />
+                </FormControl>
                 <FormMessage />
               </FormItem>
             )}
           />
 
-          <Button type="submit">Save Sale</Button>
+          <Button type="submit">
+            {saleId ? "Update Sale" : "Create Sale"}
+          </Button>
         </form>
       </Form>
-      <Toaster />
+      <Toaster position="bottom-right" />
     </div>
   );
 }

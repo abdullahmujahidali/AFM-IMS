@@ -81,6 +81,7 @@ export function DataTableDemo({
         enableSorting: false,
         enableHiding: false,
       },
+
       // ...columns.map((column) => ({
       //   ...column,
       //   header: ({ column }) => {
@@ -113,11 +114,29 @@ export function DataTableDemo({
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end">
                 <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                <DropdownMenuItem onClick={() => onRowClick(item)}>
+                <DropdownMenuItem
+                  onClick={(e) => {
+                    e.stopPropagation(); // Prevent the row click handler
+                    console.log("View details", item);
+                  }}
+                >
                   View details
                 </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => console.log("Edit", item)}>
+                <DropdownMenuItem
+                  onClick={(e) => {
+                    e.stopPropagation(); // Prevent the row click handler
+                    console.log("Edit", item);
+                  }}
+                >
                   Edit
+                </DropdownMenuItem>
+                <DropdownMenuItem
+                  onClick={(e) => {
+                    e.stopPropagation(); // Prevent the row click handler
+                    console.log("Edit", item);
+                  }}
+                >
+                  Delete
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
