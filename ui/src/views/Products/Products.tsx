@@ -11,6 +11,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import RichTextEditorField from "@/components/ui/richtexteditorfield";
 import {
   Select,
   SelectContent,
@@ -38,6 +39,7 @@ const formSchema = z.object({
   price: z.string(),
   product_type: z.string(),
   dimensions: z.string(),
+  quantity: z.string().min(2),
   size: z.string(),
   description: z.string(),
 });
@@ -71,15 +73,11 @@ function ProductsView() {
   const lowStockProducts = productsData?.results.filter(
     (product) => product.stock_quantity < 5
   );
-  const productTypeBreakdown = productsData?.results.reduce((acc, product) => {
-    acc[product.product_type] = (acc[product.product_type] || 0) + 1;
-    return acc;
-  }, {});
 
   const formattedTotalValue = totalValue
     ? totalValue
-        .toLocaleString("en-IN", { style: "currency", currency: "INR" })
-        .replace("₹", "")
+        .toLocaleString("en-EN", { style: "currency", currency: "PKR" })
+        .replace("₨", "")
     : "0";
 
   const stats = [
@@ -99,6 +97,7 @@ function ProductsView() {
       name: "",
       price: "0.0",
       product_type: "",
+      quantity: "",
       dimensions: "",
       size: "",
       description: "",
@@ -241,7 +240,7 @@ function ProductsView() {
                     <FormItem className="text-left">
                       <FormLabel>Price</FormLabel>
                       <FormControl>
-                        <Input type="number" {...field} />
+                        <Input type="text" {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -276,7 +275,63 @@ function ProductsView() {
                     </FormItem>
                   )}
                 />
-                {/* Remaining form fields go here... */}
+                <FormField
+                  control={form.control}
+                  name="quantity"
+                  render={({ field }) => (
+                    <FormItem className="text-left">
+                      <FormLabel>Quantity</FormLabel>
+                      <FormControl>
+                        <Input type="number" placeholder="10" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="dimensions"
+                  render={({ field }) => (
+                    <FormItem className="text-left">
+                      <FormLabel>Dimension</FormLabel>
+                      <FormControl>
+                        <Input placeholder="72 1¼ x 35" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="size"
+                  render={({ field }) => (
+                    <FormItem className="text-left">
+                      <FormLabel>Size</FormLabel>
+                      <FormControl>
+                        <Input placeholder="9.ft Height" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="description"
+                  render={({ field }) => (
+                    <FormItem className="text-left">
+                      <FormLabel>Description</FormLabel>
+                      <FormControl>
+                        <RichTextEditorField
+                          {...field}
+                          editorHtml={value}
+                          setEditorHtml={setValue}
+                          placeholder={"Description of the product"}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
                 <DialogFooter>
                   <Toaster richColors />
                   <Button type="submit">

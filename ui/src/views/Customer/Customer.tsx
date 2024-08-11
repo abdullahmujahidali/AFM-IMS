@@ -42,15 +42,23 @@ function CustomerView() {
   } = useSWR("/api/v1/customers/");
   const [open, setOpen] = useState(false);
   const [selectedCustomer, setSelectedCustomer] = useState(null); // Selected customer
+
+  const customersWithNegativeBalance = customersData?.results.filter(
+    (customer) => customer.balance < 0
+  );
+
   const stats = [
     { name: "Total Customers", value: customersData?.count },
     {
       name: "Total Money Owed",
       value: customersData?.total_amount_owed,
-      unit: "Rupees",
+      unit: "Rs",
     },
-    // { name: "Number of servers", value: "3" },
-    // { name: "Success rate", value: "98.5%" },
+
+    {
+      name: "Customers with Negative Balance",
+      value: customersWithNegativeBalance?.length || 0,
+    },
   ];
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -151,7 +159,7 @@ function CustomerView() {
       </div>
 
       {/* Stats */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-6 mt-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mt-6">
         {stats.map((stat, statIdx) => (
           <div
             key={stat.name}

@@ -14,9 +14,12 @@ from .models import Customer, Order, Transaction
 class CustomerViewSet(viewsets.ModelViewSet):
     queryset = Customer.objects.all()
     serializer_class = CustomerSerializer
+    authentication_classes = [JWTAuthentication]
+
+    def get_permissions(self):
+        return [IsAuthenticated()]
 
     def list(self, request, *args, **kwargs):
-        # Get the standard response from the parent class method
         response = super().list(request, *args, **kwargs)
 
         # Calculate the total amount owed

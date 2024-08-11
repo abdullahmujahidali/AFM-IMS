@@ -27,7 +27,7 @@ const formSchema = z.object({
     .array(
       z.object({
         product: z.string().min(1, "Product is required"),
-        quantity: z.number().min(1, "Quantity must be at least 1"),
+        quantity: z.string().min(1, "Quantity must be at least 1"),
         price: z.string().min(1, "Price is required"),
       })
     )
@@ -325,7 +325,7 @@ function CreateSale() {
           <Button
             type="button"
             variant="secondary"
-            onClick={() => append({ product: "", quantity: 1, price: "" })}
+            onClick={() => append({ product: "", quantity: "1", price: "" })}
           >
             Add another product
           </Button>

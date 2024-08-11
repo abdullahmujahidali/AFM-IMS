@@ -1,18 +1,32 @@
 import { SheetTrigger } from "@/components/ui/sheet";
 import {
   ColumnFiltersState,
-  SortingState,
-  VisibilityState,
   flexRender,
   getCoreRowModel,
   getFilteredRowModel,
   getPaginationRowModel,
   getSortedRowModel,
+  SortingState,
   useReactTable,
+  VisibilityState,
 } from "@tanstack/react-table";
+import { useSWRConfig } from "swr";
+
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
+
 import { ChevronDown, CirclePlusIcon } from "lucide-react";
 import React from "react";
 
+import axiosInstance from "@/axiosInstance";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import {
@@ -39,6 +53,7 @@ import {
 } from "@/components/ui/tooltip";
 import { format, parseISO } from "date-fns";
 import { MoreHorizontal } from "lucide-react";
+import { toast, Toaster } from "sonner";
 
 export function DataTableDemo({
   data,
@@ -47,6 +62,8 @@ export function DataTableDemo({
   hidden = false,
   onRowClick,
 }) {
+  const { mutate } = useSWRConfig();
+
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     []
@@ -54,6 +71,26 @@ export function DataTableDemo({
   const [columnVisibility, setColumnVisibility] =
     React.useState<VisibilityState>({});
   const [rowSelection, setRowSelection] = React.useState({});
+  const [deleteItem, setDeleteItem] = React.useState(null);
+  const [isAlertDialogOpen, setAlertDialogOpen] = React.useState(false);
+
+  const handleDelete = async () => {
+    if (deleteItem) {
+      try {
+        await axiosInstance.delete(
+          `/api/v1/${type.toLowerCase()}s/${deleteItem.id}/`
+        );
+        setDeleteItem(null);
+        mutate(`/api/v1/${type.toLowerCase()}s`);
+        toast.success(`${type} Deleted!`);
+
+        setAlertDialogOpen(false);
+        // Optionally, refresh the data or notify the user
+      } catch (error) {
+        console.error("Failed to delete the item:", error);
+      }
+    }
+  };
 
   const table = useReactTable({
     data,
@@ -132,8 +169,9 @@ export function DataTableDemo({
                 </DropdownMenuItem>
                 <DropdownMenuItem
                   onClick={(e) => {
-                    e.stopPropagation(); // Prevent the row click handler
-                    console.log("Edit", item);
+                    e.stopPropagation();
+                    setDeleteItem(item);
+                    setAlertDialogOpen(true);
                   }}
                 >
                   Delete
@@ -302,6 +340,26 @@ export function DataTableDemo({
           </Button>
         </div>
       </div>
+      <AlertDialog open={isAlertDialogOpen} onOpenChange={setAlertDialogOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+            <AlertDialogDescription>
+              This action cannot be undone. This will permanently delete the{" "}
+              {type.toLowerCase()} and remove it from our servers.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel onClick={() => setAlertDialogOpen(false)}>
+              Cancel
+            </AlertDialogCancel>
+            <AlertDialogAction onClick={handleDelete}>
+              Continue
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+      <Toaster richColors />
     </div>
   );
 }
