@@ -10,7 +10,6 @@ import {
   useReactTable,
   VisibilityState,
 } from "@tanstack/react-table";
-import { useSWRConfig } from "swr";
 
 import {
   AlertDialog,
@@ -58,12 +57,11 @@ import { toast, Toaster } from "sonner";
 export function DataTableDemo({
   data,
   columns,
+  mutate,
   type,
   hidden = false,
   onRowClick,
 }) {
-  const { mutate } = useSWRConfig();
-
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     []
@@ -81,7 +79,7 @@ export function DataTableDemo({
           `/api/v1/${type.toLowerCase()}s/${deleteItem.id}/`
         );
         setDeleteItem(null);
-        mutate(`/api/v1/${type.toLowerCase()}s`);
+        mutate();
         toast.success(`${type} Deleted!`);
 
         setAlertDialogOpen(false);

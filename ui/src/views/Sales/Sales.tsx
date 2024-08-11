@@ -13,7 +13,7 @@ import { useNavigate } from "react-router-dom";
 import useSWR from "swr";
 
 function SalesView() {
-  const { data, error, isLoading } = useSWR("/api/v1/sales/");
+  const { data, error, mutate, isLoading } = useSWR("/api/v1/sales/");
   const [stats, setStats] = useState({});
   const navigate = useNavigate();
 
@@ -113,6 +113,7 @@ function SalesView() {
       <DataTableDemo
         data={data.results}
         columns={columns}
+        mutate={mutate}
         type="Sale"
         onRowClick={handleRowClick}
       />

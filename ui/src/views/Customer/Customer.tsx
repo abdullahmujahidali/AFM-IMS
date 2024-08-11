@@ -183,6 +183,7 @@ function CustomerView() {
       <Dialog open={open} onOpenChange={setOpen}>
         <DataTableDemo
           onRowClick={handleRowClick}
+          mutate={mutate}
           data={customersData?.results}
           columns={columns}
           type="Customer"

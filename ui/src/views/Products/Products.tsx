@@ -203,6 +203,7 @@ function ProductsView() {
         <DataTableDemo
           onRowClick={handleRowClick}
           data={productsData.results}
+          mutate={mutate}
           columns={columns}
           type="Product"
         />
