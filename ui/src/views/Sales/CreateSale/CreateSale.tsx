@@ -22,18 +22,18 @@ import useSWR from "swr";
 import { z } from "zod";
 
 const formSchema = z.object({
-  customer: z.string().min(1, "Customer is required"),
-  products: z
+  customer_id: z.string().min(1, "Customer is required"),
+  items: z
     .array(
       z.object({
-        product: z.string().min(1, "Product is required"),
-        quantity: z.string().min(1, "Quantity must be at least 1"),
-        price: z.string().min(1, "Price is required"),
+        product_id: z.string().min(1, "Product is required"),
+        quantity: z.coerce.number().min(1, "Quantity must be at least 1"),
+        price: z.coerce.number().min(0, "Price is required"),
       })
     )
     .min(1, "At least one product is required"),
-  total_amount: z.string().min(1, "Total amount is required"),
-  paying_amount: z.string().min(1, "Paying amount is required"),
+  total_amount: z.coerce.number().min(0, "Total amount is required"),
+  paying_amount: z.coerce.number().min(0, "Paying amount is required"),
   comments: z.string().optional(),
 });
 
@@ -48,9 +48,7 @@ function CreateSale() {
     balance: number;
   } | null>(null);
   const [descriptionValue, setDescriptionValue] = useState<string>("");
-  const [calculatedBalance, setCalculatedBalance] = useState<number | null>(
-    null
-  );
+  const [calculatedBalance, setCalculatedBalance] = useState<number>(0);
 
   const { data: customers } = useSWR("/api/v1/customers/");
   const { data: saleObject } = useSWR(
@@ -61,17 +59,17 @@ function CreateSale() {
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      customer: "",
-      products: [{ product: "", quantity: 1, price: "" }],
-      total_amount: "0",
-      paying_amount: "",
+      customer_id: "",
+      items: [{ product_id: "", quantity: 1, price: 0 }],
+      total_amount: 0,
+      paying_amount: 0,
       comments: "",
     },
   });
 
   const { fields, append, remove } = useFieldArray({
     control: form.control,
-    name: "products",
+    name: "items",
   });
 
   useEffect(() => {
@@ -86,35 +84,24 @@ function CreateSale() {
 
   useEffect(() => {
     if (saleObject) {
-      form.setValue("customer", saleObject.customer.id);
+      form.setValue("customer_id", saleObject.customer.id);
       setSelectedCustomer({
         name: saleObject.customer.name,
         balance: parseFloat(saleObject.customer.balance),
       });
 
-      saleObject.products.forEach((product, index: number) => {
-        if (index === 0) {
-          form.setValue(`products.${index}.product`, product.product.id);
-          form.setValue(`products.${index}.quantity`, product.quantity);
-          form.setValue(`products.${index}.price`, product.price);
-        } else {
-          append({
-            product: product.product.id,
-            quantity: product.quantity,
-            price: product.price,
-          });
-        }
-      });
-
+      form.setValue("items", saleObject.items);
       form.setValue("total_amount", saleObject.total_amount);
+      form.setValue("paying_amount", saleObject.paying_amount);
       form.setValue("comments", saleObject.comments || "");
+      console.log("saleObject: ", saleObject);
       setCalculatedBalance(saleObject.balance);
     }
-  }, [saleObject, append, form]);
+  }, [saleObject, form]);
 
   useEffect(() => {
     const subscription = form.watch((value, { name }) => {
-      if (name?.startsWith("products") || name === "paying_amount") {
+      if (name?.startsWith("items") || name === "paying_amount") {
         updateTotalAndBalance(value);
       }
     });
@@ -123,18 +110,18 @@ function CreateSale() {
 
   const updateTotalAndBalance = (formValues: Partial<FormValues>) => {
     const total =
-      formValues.products?.reduce((sum, product) => {
-        const quantity = product.quantity || 0;
-        const price = parseFloat(product.price || "0");
-        return sum + quantity * price;
+      formValues.items?.reduce((sum, item) => {
+        return sum + (item.quantity || 0) * (item.price || 0);
       }, 0) || 0;
 
-    form.setValue("total_amount", total.toFixed(2));
-
+    form.setValue("total_amount", total);
     if (selectedCustomer) {
-      const payingAmount = parseFloat(formValues.paying_amount || "0");
+      const payingAmount = +(formValues.paying_amount ?? 0);
       const newBalance = selectedCustomer.balance - total + payingAmount;
       setCalculatedBalance(newBalance);
+    } else {
+      console.log("lol");
+      setCalculatedBalance(0);
     }
   };
 
@@ -147,16 +134,12 @@ function CreateSale() {
     }
 
     const body_data = {
-      customer_id: values.customer,
-      products: values.products.map((product) => ({
-        product_id: product.product,
-        quantity: product.quantity,
-        price: product.price,
-      })),
+      customer_id: values.customer_id,
+      items: values.items,
       total_amount: values.total_amount,
       paying_amount: values.paying_amount,
       comments: values.comments,
-      balance: calculatedBalance.toFixed(2),
+      balance: calculatedBalance,
     };
 
     try {
@@ -206,7 +189,7 @@ function CreateSale() {
           {/* Customer field */}
           <FormField
             control={form.control}
-            name="customer"
+            name="customer_id"
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Customer</FormLabel>
@@ -244,7 +227,7 @@ function CreateSale() {
               <div key={field.id} className="flex items-center space-x-2">
                 <FormField
                   control={form.control}
-                  name={`products.${index}.product`}
+                  name={`items.${index}.product_id`}
                   render={({ field }) => (
                     <FormItem className="flex-grow">
                       <FormLabel>Product</FormLabel>
@@ -265,8 +248,8 @@ function CreateSale() {
                             );
                             if (selectedProduct) {
                               form.setValue(
-                                `products.${index}.price`,
-                                selectedProduct.price.toString()
+                                `items.${index}.price`,
+                                selectedProduct.price
                               );
                             }
                           }}
@@ -277,37 +260,34 @@ function CreateSale() {
                   )}
                 />
 
-                {/* Quantity field */}
                 <FormField
                   control={form.control}
-                  name={`products.${index}.quantity`}
+                  name={`items.${index}.quantity`}
                   render={({ field }) => (
                     <FormItem className="w-24">
                       <FormLabel>Quantity</FormLabel>
                       <FormControl>
-                        <Input min={2} max={10} type="number" {...field} />
+                        <Input type="number" {...field} min={1} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
                   )}
                 />
 
-                {/* Price field */}
                 <FormField
                   control={form.control}
-                  name={`products.${index}.price`}
+                  name={`items.${index}.price`}
                   render={({ field }) => (
                     <FormItem className="w-24">
                       <FormLabel>Price</FormLabel>
                       <FormControl>
-                        <Input type="text" {...field} />
+                        <Input type="number" {...field} step="0.01" min="0" />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
                   )}
                 />
 
-                {/* Remove button */}
                 <div className="flex items-center justify-center mt-auto">
                   <Button
                     type="button"
@@ -325,10 +305,11 @@ function CreateSale() {
           <Button
             type="button"
             variant="secondary"
-            onClick={() => append({ product: "", quantity: "1", price: "" })}
+            onClick={() => append({ product_id: "", quantity: 1, price: 0 })}
           >
             Add another product
           </Button>
+
           <div className="flex flex-col md:flex-row w-full gap-2">
             {/* Total Amount field */}
             <FormField
@@ -387,7 +368,7 @@ function CreateSale() {
             )}
           />
           {calculatedBalance !== null && (
-            <p>New Balance: {calculatedBalance.toFixed(2)}</p>
+            <p>New Balance: {calculatedBalance}</p>
           )}
           <Button type="submit">
             {saleId ? "Update Sale" : "Create Sale"}

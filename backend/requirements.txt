@@ -7,3 +7,4 @@ psycopg2==2.9.9
 PyJWT==2.8.0
 sqlparse==0.5.1
 django-cors-headers==4.4.0
+django-filter==24.3

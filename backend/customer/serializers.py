@@ -1,7 +1,7 @@
 from products.models import Product
 from rest_framework import serializers
 
-from .models import Customer, Order, Transaction
+from .models import Customer, Order, OrderItem, Transaction
 
 
 class CustomerSerializer(serializers.ModelSerializer):
@@ -41,22 +41,47 @@ class CustomerListSerializer(serializers.ListSerializer):
         fields = ["total_amount_owed", "results"]
 
 
+class OrderItemSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = OrderItem
+        fields = ["product", "quantity", "price"]
+
+
 class OrderSerializer(serializers.ModelSerializer):
+    items = OrderItemSerializer(many=True)
 
     class Meta:
         model = Order
-        fields = "__all__"
+        fields = ["id", "customer", "total_price", "status", "items", "created_at"]
 
     def create(self, validated_data):
-        product = validated_data.pop("product")
-        customer = validated_data.pop("customer")
-        product = Product.objects.get(id=product.id)
-        customer = Customer.objects.get(id=customer.id)
-
-        order = Order.objects.create(
-            product=product, customer=customer, **validated_data
-        )
+        items_data = validated_data.pop("items")
+        order = Order.objects.create(**validated_data)
+        for item_data in items_data:
+            OrderItem.objects.create(order=order, **item_data)
         return order
+
+    def update(self, instance, validated_data):
+        items_data = validated_data.pop("items")
+        instance = super().update(instance, validated_data)
+
+        # Update or create order items
+        existing_items = instance.items.all()
+        for item_data in items_data:
+            item = existing_items.filter(product=item_data["product"]).first()
+            if item:
+                for attr, value in item_data.items():
+                    setattr(item, attr, value)
+                item.save()
+            else:
+                OrderItem.objects.create(order=instance, **item_data)
+
+        # Remove items not in the updated data
+        existing_items.exclude(
+            product__in=[item["product"] for item in items_data]
+        ).delete()
+
+        return instance
 
 
 class TransactionSerializer(serializers.ModelSerializer):

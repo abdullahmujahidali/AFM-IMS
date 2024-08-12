@@ -92,9 +92,10 @@ export default function Sidebar({
               <div className="flex h-16 shrink-0 items-center">
                 <img
                   alt="Your Company"
-                  src="/logo2.svg"
+                  src="/logo.svg"
                   className="h-8 w-auto"
                 />
+                <h1 className="text-black text-bold text-2xl">منشی</h1>
               </div>
               <nav className="flex flex-1 flex-col">
                 <ul role="list" className="flex flex-1 flex-col gap-y-7">
@@ -155,7 +156,8 @@ export default function Sidebar({
       <div className="hidden lg:fixed lg:inset-y-0 lg:z-50 lg:flex lg:w-64 lg:flex-col">
         <div className="flex grow flex-col gap-y-5 overflow-y-auto bg-white border border-gray-200 px-6 ring-1 ring-white/5">
           <div className="flex h-16 shrink-0 items-center">
-            <img alt="Your Company" src="/logo2.svg" className="h-8 w-auto" />
+            <img alt="Your Company" src="/logo.svg" className="h-24 w-auto" />
+            <h1 className="text-black font-bold text-2xl">منشی</h1>
           </div>
           <nav className="flex flex-1 flex-col">
             <ul role="list" className="flex flex-1 flex-col gap-y-7">

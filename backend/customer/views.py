@@ -3,7 +3,8 @@ from customer.serializers import (
     OrderSerializer,
     TransactionSerializer,
 )
-from rest_framework import status, viewsets
+from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework import viewsets
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework_simplejwt.authentication import JWTAuthentication
@@ -15,6 +16,8 @@ class CustomerViewSet(viewsets.ModelViewSet):
     queryset = Customer.objects.all()
     serializer_class = CustomerSerializer
     authentication_classes = [JWTAuthentication]
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ["id"]
 
     def get_permissions(self):
         return [IsAuthenticated()]
@@ -42,15 +45,27 @@ class OrderViewSet(viewsets.ModelViewSet):
     serializer_class = OrderSerializer
     authentication_classes = [JWTAuthentication]
     permission_classes = [IsAuthenticated]
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ["customer"]
 
-    def create(self, request, *args, **kwargs):
-        serializer = self.get_serializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        self.perform_create(serializer)
-        headers = self.get_success_headers(serializer.data)
-        return Response(
-            serializer.data, status=status.HTTP_201_CREATED, headers=headers
-        )
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        customer_id = self.request.query_params.get("customer", None)
+        if customer_id:
+            queryset = queryset.filter(customer=customer_id)
+        return queryset
+
+    def perform_create(self, serializer):
+        order = serializer.save()
+        total_price = sum(item.price for item in order.items.all())
+        order.total_price = total_price
+        order.save()
+
+    def perform_update(self, serializer):
+        order = serializer.save()
+        total_price = sum(item.price for item in order.items.all())
+        order.total_price = total_price
+        order.save()
 
 
 class TransactionViewSet(viewsets.ModelViewSet):

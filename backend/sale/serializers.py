@@ -35,7 +35,7 @@ class SaleSerializer(serializers.ModelSerializer):
     customer_id = serializers.PrimaryKeyRelatedField(
         queryset=Customer.objects.all(), source="customer", write_only=True
     )
-    products = SaleProductSerializer(many=True, source="saleproduct_set")
+    items = SaleProductSerializer(many=True, source="saleproduct_set")
     paying_amount = serializers.DecimalField(
         max_digits=10, decimal_places=2, required=False
     )
@@ -47,7 +47,7 @@ class SaleSerializer(serializers.ModelSerializer):
             "id",
             "customer",
             "customer_id",
-            "products",
+            "items",
             "total_amount",
             "comments",
             "paying_amount",

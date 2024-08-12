@@ -1,4 +1,4 @@
-import { DataTableDemo } from "@/components/ui/DataTable";
+import { ListDataTable } from "@/components/ui/ListDataTable";
 import {
   Sheet,
   SheetContent,
@@ -6,7 +6,6 @@ import {
   SheetTitle,
 } from "@/components/ui/sheet";
 
-import { formatCurrency } from "@/lib/utils";
 import { formatDate } from "date-fns";
 import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -43,8 +42,8 @@ function SalesView() {
       );
 
       setStats({
-        totalSalesThisMonth: formatCurrency(totalSalesThisMonth),
-        totalSalesToday: formatCurrency(totalSalesToday),
+        totalSalesThisMonth: totalSalesThisMonth,
+        totalSalesToday: totalSalesToday,
         numberOfSalesThisMonth: salesThisMonth.length,
       });
     }
@@ -110,7 +109,7 @@ function SalesView() {
           </div>
         ))}
       </div>
-      <DataTableDemo
+      <ListDataTable
         data={data.results}
         columns={columns}
         mutate={mutate}

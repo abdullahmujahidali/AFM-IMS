@@ -51,7 +51,7 @@ function SignUp() {
   return (
     <div className="flex items-center justify-center w-full h-full bg-cover bg-center p-6">
       <div className="w-full max-w-[350px] p-6 bg-white rounded-lg shadow-md">
-        <img src="/logo2.svg" alt="Logo" className="w-24 h-auto mx-auto mb-4" />
+        <img src="/logo.svg" alt="Logo" className="w-24 h-auto mx-auto mb-4" />
         <h1 className="text-2xl font-bold mb-6">Register</h1>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">

@@ -52,7 +52,7 @@ export default function Header() {
       <div className="flex items-center justify-between">
         <div>
           <NavLink to="#">
-            <img src="/logo2.svg" alt="Logo" className="w-8 h-auto mx-auto" />
+            <img src="/logo.svg" alt="Logo" className="w-8 h-auto mx-auto" />
           </NavLink>
         </div>
         <div className="hidden md:flex space-x-4">

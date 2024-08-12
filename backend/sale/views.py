@@ -1,6 +1,8 @@
-from customer.models import Order, Transaction
+from customer.models import Order, OrderItem, Transaction
+from django.db import transaction
 from django.db.models import Prefetch
-from rest_framework import status, viewsets
+from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework import serializers, status, viewsets
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework_simplejwt.authentication import JWTAuthentication
@@ -14,10 +16,15 @@ class SaleViewSet(viewsets.ModelViewSet):
     serializer_class = SaleSerializer
     authentication_classes = [JWTAuthentication]
     permission_classes = [IsAuthenticated]
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ["customer"]
 
     def get_queryset(self):
-        return Sale.objects.select_related('customer').prefetch_related(
-            Prefetch('saleproduct_set', queryset=SaleProduct.objects.select_related('product'))
+        return Sale.objects.select_related("customer").prefetch_related(
+            Prefetch(
+                "saleproduct_set",
+                queryset=SaleProduct.objects.select_related("product"),
+            )
         )
 
     def create(self, request, *args, **kwargs):
@@ -26,22 +33,36 @@ class SaleViewSet(viewsets.ModelViewSet):
         self.perform_create(serializer)
         sale = serializer.instance
 
-        # Create invoice for the sale
+        order = Order.objects.create(
+            customer=sale.customer,
+            total_price=sale.total_amount,
+            status="PENDING",
+        )
+
+        # Create order items for each sale product
         for sale_product in sale.saleproduct_set.all():
-            order = Order.objects.create(
-                customer=sale.customer,
+            OrderItem.objects.create(
+                order=order,
                 product=sale_product.product,
                 quantity=sale_product.quantity,
-                total_price=sale_product.price * sale_product.quantity,
-                status="PENDING",
+                price=sale_product.price,
             )
-            Transaction.objects.create(
-                customer=sale.customer,
-                order=order,
-                transaction_type="DEBIT",
-                amount=order.total_price,
-                status="UNPAID",
-            )
+
+        Transaction.objects.create(
+            customer=sale.customer,
+            order=order,
+            transaction_type="DEBIT",
+            amount=order.total_price,
+            status="UNPAID",
+        )
+        for sale_product in sale.saleproduct_set.all():
+            product = sale_product.product
+            product.stock_quantity -= sale_product.quantity
+            if product.stock_quantity < 0:
+                raise serializers.ValidationError(
+                    f"Not enough stock_quantity for product {product.id}"
+                )
+            product.save()
 
         headers = self.get_success_headers(serializer.data)
         return Response(
@@ -57,3 +78,24 @@ class SaleViewSet(viewsets.ModelViewSet):
 
         serializer = self.get_serializer(queryset, many=True)
         return Response(serializer.data)
+
+    def destroy(self, request, *args, **kwargs):
+        instance = self.get_object()
+        # Store related sale products before deleting the sale
+        sale_products = instance.saleproduct_set.all()
+
+        # Delete the sale instance
+        self.perform_destroy(instance)
+
+        # Revert stock_quantity and customer balance
+        with transaction.atomic():
+            for sale_product in sale_products:
+                product = sale_product.product
+                product.stock_quantity += sale_product.quantity
+                product.save()
+
+            customer = instance.customer
+            customer.balance -= instance.total_amount
+            customer.save()
+
+        return Response(status=status.HTTP_204_NO_CONTENT)

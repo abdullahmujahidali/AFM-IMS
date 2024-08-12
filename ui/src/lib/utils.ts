@@ -5,7 +5,7 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
-export function formatCurrency(value, currency = "PKR") {
+export function formatCurrency(value, currency = "") {
   if (isNaN(value)) return "Invalid value";
 
   return new Intl.NumberFormat("en-US", {

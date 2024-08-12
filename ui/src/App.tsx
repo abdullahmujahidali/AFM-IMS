@@ -19,6 +19,8 @@ import ProductsView from "./views/Products/Products";
 import CreateSale from "./views/Sales/CreateSale/CreateSale";
 import SalesView from "./views/Sales/Sales";
 import SettingsView from "./views/Settings/Settings";
+import CustomerDetailView from "./views/Customer/CutomerDetail";
+import InvoiceDetails from "./views/Invoices/Invoices";
 
 const router = createBrowserRouter([
   {
@@ -54,6 +56,10 @@ const router = createBrowserRouter([
             path: "",
             element: <Dashboard />,
           },
+          {
+            path: ":customerId",
+            element: <CustomerDetailView />,
+          },
         ],
       },
       {
@@ -79,6 +85,15 @@ const router = createBrowserRouter([
           {
             path: "edit/:saleId",
             element: <CreateSale />,
+          },
+        ],
+      },
+      {
+        path: "invoices",
+        children: [
+          {
+            path: "",
+            element: <InvoiceDetails />,
           },
         ],
       },

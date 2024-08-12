@@ -1,6 +1,5 @@
 import axiosInstance from "@/axiosInstance";
 import { Button } from "@/components/ui/button";
-import { DataTableDemo } from "@/components/ui/DataTable";
 import {
   Dialog,
   DialogContent,
@@ -9,6 +8,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import { ListDataTable } from "@/components/ui/ListDataTable";
 
 import {
   Form,
@@ -23,6 +23,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import "react-quill/dist/quill.snow.css";
+import { useNavigate } from "react-router-dom";
 import { toast, Toaster } from "sonner";
 import useSWR from "swr";
 import { z } from "zod";
@@ -40,6 +41,7 @@ function CustomerView() {
     mutate,
     isLoading,
   } = useSWR("/api/v1/customers/");
+  const navigate = useNavigate();
   const [open, setOpen] = useState(false);
   const [selectedCustomer, setSelectedCustomer] = useState(null); // Selected customer
 
@@ -132,6 +134,11 @@ function CustomerView() {
     setOpen(true); // Open the dialog
   };
 
+  const navigateToDetails = (customer) => {
+    console.log("customer: ", customer);
+    navigate(`/dashboard/customers/${customer?.id}`);
+  };
+
   if (isLoading) return <div>Loading...</div>;
   if (error) return <div>Error loading data</div>;
 
@@ -181,8 +188,9 @@ function CustomerView() {
       </div>
 
       <Dialog open={open} onOpenChange={setOpen}>
-        <DataTableDemo
+        <ListDataTable
           onRowClick={handleRowClick}
+          detailsNavigator={navigateToDetails}
           mutate={mutate}
           data={customersData?.results}
           columns={columns}

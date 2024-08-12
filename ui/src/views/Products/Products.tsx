@@ -1,6 +1,5 @@
 import axiosInstance from "@/axiosInstance";
 import { Button } from "@/components/ui/button";
-import { DataTableDemo } from "@/components/ui/DataTable";
 import { DialogFooter } from "@/components/ui/dialog";
 import {
   Form,
@@ -11,6 +10,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { ListDataTable } from "@/components/ui/ListDataTable";
 import RichTextEditorField from "@/components/ui/richtexteditorfield";
 import {
   Select,
@@ -74,19 +74,13 @@ function ProductsView() {
     (product) => product.stock_quantity < 5
   );
 
-  const formattedTotalValue = totalValue
-    ? totalValue
-        .toLocaleString("en-EN", { style: "currency", currency: "PKR" })
-        .replace("₨", "")
-    : "0";
-
   const stats = [
     { name: "Total Products", value: productsData?.results.length || 0 },
     { name: "Total Stock Quantity", value: totalStockQuantity },
     {
       name: "Total Inventory Value",
-      value: formattedTotalValue,
-      unit: "Rupees",
+      value: totalValue.toFixed(2),
+      unit: "Rs",
     },
     { name: "Low Stock Products", value: lowStockProducts?.length || 0 },
   ];
@@ -200,7 +194,7 @@ function ProductsView() {
         ))}
       </div>
       <Sheet open={isSheetOpen} onOpenChange={setIsSheetOpen}>
-        <DataTableDemo
+        <ListDataTable
           onRowClick={handleRowClick}
           data={productsData.results}
           mutate={mutate}
