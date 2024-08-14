@@ -13,6 +13,7 @@ import {
 import { Input } from "@/components/ui/input";
 import RichTextEditorField from "@/components/ui/richtexteditorfield";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { AxiosError } from "axios";
 import { X } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
@@ -153,7 +154,26 @@ function CreateSale() {
       navigate("/");
     } catch (error) {
       console.error("Error:", error);
-      toast.error("Something went wrong!");
+      if (error instanceof AxiosError && error.response) {
+        const errorData = error.response.data;
+        if (typeof errorData.detail === "string") {
+          toast.error(errorData.detail);
+        } else if (typeof errorData === "object") {
+          Object.entries(errorData).forEach(([key, value]) => {
+            if (Array.isArray(value)) {
+              form.setError(key as keyof FormValues, {
+                type: "manual",
+                message: value[0],
+              });
+            }
+          });
+          toast.error("Please check the form for errors.");
+        } else {
+          toast.error("An unexpected error occurred. Please try again.");
+        }
+      } else {
+        toast.error("An unexpected error occurred. Please try again.");
+      }
     }
   };
 

@@ -1,24 +1,17 @@
 import { DetailsDataTable } from "@/components/DetailsDataTable";
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from "@/components/ui/accordion";
 import { useMemo } from "react";
 import "react-quill/dist/quill.snow.css";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import useSWR from "swr";
 
 function CustomerDetailView() {
   const { customerId } = useParams();
+  const navigate = useNavigate();
   const {
     data: customersData,
     error,
     isLoading,
   } = useSWR(`/api/v1/customers/${customerId}`);
-
-  const { data: salesData } = useSWR(`/api/v1/sales/?id=${customerId}`);
 
   const { data: orderData } = useSWR(`/api/v1/orders/?customer=${customerId}`);
 
@@ -31,6 +24,10 @@ function CustomerDetailView() {
     ],
     []
   );
+
+  const handleRowClick = (invoice) => {
+    navigate(`invoices/${invoice.id}/`);
+  };
 
   if (isLoading) return <div>Loading...</div>;
   if (error) return <div>Error loading data</div>;
@@ -46,59 +43,18 @@ function CustomerDetailView() {
           Amount Owed: {customersData.amount_owed}
         </p>
       </div>
-
-      <DetailsDataTable
-        data={orderData?.results} // Ensure data doesn't include items
-        columns={columns}
-      />
-
-      {/* Orders Accordion */}
-      <Accordion type="single" collapsible>
-        <h3 className="text-xl font-semibold">Orders</h3>
-        {orderData?.results?.map((order) => (
-          <AccordionItem key={order.id} value={order.id}>
-            <AccordionTrigger>
-              <div className="flex justify-between">
-                <span>Order #{order.id}</span>
-                <span>{order.total_price}</span>
-              </div>
-            </AccordionTrigger>
-            <AccordionContent>
-              <p>Status: {order.status}</p>
-              <p>Date: {order.created_at}</p>
-              {/* Optionally include items in the accordion if needed */}
-            </AccordionContent>
-          </AccordionItem>
-        ))}
-      </Accordion>
-
-      {/* Sales Accordion */}
-      <Accordion type="single" collapsible>
-        <h3 className="text-xl font-semibold">Sales</h3>
-        {salesData?.results?.map((sale) => (
-          <AccordionItem key={sale.id} value={sale.id}>
-            <AccordionTrigger>
-              <div className="flex justify-between">
-                <span>Sale #{sale.id}</span>
-                <span>{sale.total_amount}</span>
-              </div>
-            </AccordionTrigger>
-            <AccordionContent>
-              <p>Date: {sale.created_at}</p>
-              <p>Balance: {sale.balance}</p>
-              <p>Comments: {sale.comments || "No comments"}</p>
-              <ul className="pl-4 list-disc">
-                {sale.items.map((item, idx) => (
-                  <li key={idx}>
-                    {item.product.name} - Quantity: {item.quantity} - Price:{" "}
-                    {item.price}
-                  </li>
-                ))}
-              </ul>
-            </AccordionContent>
-          </AccordionItem>
-        ))}
-      </Accordion>
+      {orderData?.results?.length > 0 ? (
+        <DetailsDataTable
+          data={orderData?.results} // Ensure data doesn't include items
+          columns={columns}
+          viewClick={handleRowClick}
+        />
+      ) : (
+        <div className="flex flex-col items-center">
+          <img src="/src/assets/space.svg" className="h-64 w-64 " />
+          <h1>No invoice found</h1>
+        </div>
+      )}
     </div>
   );
 }

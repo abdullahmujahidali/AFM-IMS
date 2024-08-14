@@ -1,8 +1,13 @@
+from decimal import Decimal
+
 from customer.models import Order, OrderItem, Transaction
 from django.db import transaction
 from django.db.models import Prefetch
 from django_filters.rest_framework import DjangoFilterBackend
-from rest_framework import serializers, status, viewsets
+from rest_framework import serializers
+from rest_framework import status
+from rest_framework import status as drf_status
+from rest_framework import viewsets
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework_simplejwt.authentication import JWTAuthentication
@@ -30,43 +35,56 @@ class SaleViewSet(viewsets.ModelViewSet):
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-        self.perform_create(serializer)
-        sale = serializer.instance
 
-        order = Order.objects.create(
-            customer=sale.customer,
-            total_price=sale.total_amount,
-            status="PENDING",
-        )
-
-        # Create order items for each sale product
-        for sale_product in sale.saleproduct_set.all():
-            OrderItem.objects.create(
-                order=order,
-                product=sale_product.product,
-                quantity=sale_product.quantity,
-                price=sale_product.price,
-            )
-
-        Transaction.objects.create(
-            customer=sale.customer,
-            order=order,
-            transaction_type="DEBIT",
-            amount=order.total_price,
-            status="UNPAID",
-        )
-        for sale_product in sale.saleproduct_set.all():
-            product = sale_product.product
-            product.stock_quantity -= sale_product.quantity
-            if product.stock_quantity < 0:
-                raise serializers.ValidationError(
-                    f"Not enough stock_quantity for product {product.id}"
+        try:
+            with transaction.atomic():
+                sale = serializer.save()
+                order = Order.objects.create(
+                    customer=sale.customer,
+                    total_price=sale.total_amount,
+                    status="PENDING",
                 )
-            product.save()
+
+                for sale_product in sale.saleproduct_set.all():
+                    OrderItem.objects.create(
+                        order=order,
+                        product=sale_product.product,
+                        quantity=sale_product.quantity,
+                        price=sale_product.price,
+                    )
+
+                    product = sale_product.product
+                    if product.stock_quantity < sale_product.quantity:
+                        raise serializers.ValidationError(
+                            f"Not enough stock for product {product.name}. Available: {product.stock_quantity}"
+                        )
+                    product.stock_quantity -= sale_product.quantity
+                    product.save()
+
+                paying_amount = Decimal(request.data.get("paying_amount", 0))
+                total_amount = sale.total_amount
+
+                if paying_amount == 0:
+                    status = "UNPAID"
+                elif paying_amount >= total_amount:
+                    status = "PAID"
+                else:
+                    status = "PARTIALLY_PAID"
+
+                Transaction.objects.create(
+                    customer=sale.customer,
+                    order=order,
+                    transaction_type="DEBIT",
+                    amount=total_amount,
+                    status=status,
+                )
+
+        except serializers.ValidationError as e:
+            return Response({"detail": str(e)}, status=drf_status.HTTP_400_BAD_REQUEST)
 
         headers = self.get_success_headers(serializer.data)
         return Response(
-            serializer.data, status=status.HTTP_201_CREATED, headers=headers
+            serializer.data, status=drf_status.HTTP_201_CREATED, headers=headers
         )
 
     def list(self, request, *args, **kwargs):

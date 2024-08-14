@@ -165,7 +165,12 @@ export const columns: ColumnDef<Payment>[] = [
   },
 ];
 
-export function DetailsDataTable({ data = [], columns = [], mutate }) {
+export function DetailsDataTable({
+  data = [],
+  columns = [],
+  mutate,
+  viewClick,
+}) {
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     []
@@ -201,23 +206,6 @@ export function DetailsDataTable({ data = [], columns = [], mutate }) {
         enableHiding: false,
       },
 
-      // ...columns.map((column) => ({
-      //   ...column,
-      //   header: ({ column }) => {
-      //     console.log("header: ", column);
-      //     return (
-      //       <Button
-      //         variant="ghost"
-      //         onClick={() =>
-      //           column.toggleSorting(column.getIsSorted() === "asc")
-      //         }
-      //       >
-      //         {column.id}
-      //         <ArrowUpDown className="ml-2 h-4 w-4" />
-      //       </Button>
-      //     );
-      //   },
-      // })),
       ...columns,
       {
         id: "actions",
@@ -236,6 +224,7 @@ export function DetailsDataTable({ data = [], columns = [], mutate }) {
                 <DropdownMenuItem
                   onClick={(e) => {
                     e.stopPropagation(); // Prevent the row click handler
+                    viewClick(item);
                     console.log("View details", item);
                   }}
                 >

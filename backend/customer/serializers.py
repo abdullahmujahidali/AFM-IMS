@@ -41,14 +41,33 @@ class CustomerListSerializer(serializers.ListSerializer):
         fields = ["total_amount_owed", "results"]
 
 
+class ProductSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Product
+        fields = [
+            "id",
+            "name",
+            "price",
+            "product_type",
+            "dimensions",
+            "size",
+            "description",
+        ]
+
+
 class OrderItemSerializer(serializers.ModelSerializer):
+    product = ProductSerializer()  # Include the full product details
+
     class Meta:
         model = OrderItem
         fields = ["product", "quantity", "price"]
 
 
 class OrderSerializer(serializers.ModelSerializer):
-    items = OrderItemSerializer(many=True)
+    items = OrderItemSerializer(
+        many=True
+    )  # Include the items with full product details
+    customer = CustomerSerializer()
 
     class Meta:
         model = Order

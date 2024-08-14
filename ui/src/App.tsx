@@ -14,13 +14,13 @@ import PublicViewLayout from "./layouts/PublicViewLayout";
 import SignIn from "./views/Auth/Signin";
 import SignUp from "./views/Auth/Signup";
 import Dashboard from "./views/Customer/Customer";
+import CustomerDetailView from "./views/Customer/CutomerDetail";
+import InvoiceDetails from "./views/Invoices/Invoices";
 import Landing from "./views/Landing/Landing";
 import ProductsView from "./views/Products/Products";
 import CreateSale from "./views/Sales/CreateSale/CreateSale";
 import SalesView from "./views/Sales/Sales";
 import SettingsView from "./views/Settings/Settings";
-import CustomerDetailView from "./views/Customer/CutomerDetail";
-import InvoiceDetails from "./views/Invoices/Invoices";
 
 const router = createBrowserRouter([
   {
@@ -59,6 +59,10 @@ const router = createBrowserRouter([
           {
             path: ":customerId",
             element: <CustomerDetailView />,
+          },
+          {
+            path: ":customerId/invoices/:invoiceId",
+            element: <InvoiceDetails />,
           },
         ],
       },
