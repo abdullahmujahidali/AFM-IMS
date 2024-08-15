@@ -12,6 +12,7 @@ class Sale(ID, Dates):
     )
     products = models.ManyToManyField(Product, through="SaleProduct")
     total_amount = models.DecimalField(max_digits=10, decimal_places=2)
+    amount_paid = models.DecimalField(max_digits=10, decimal_places=2, default=0)
     comments = models.TextField(blank=True, null=True)
 
     def __str__(self):

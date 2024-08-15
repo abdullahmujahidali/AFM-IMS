@@ -61,22 +61,22 @@ class SaleViewSet(viewsets.ModelViewSet):
                     product.stock_quantity -= sale_product.quantity
                     product.save()
 
-                paying_amount = Decimal(request.data.get("paying_amount", 0))
+                amount_paid = Decimal(sale.amount_paid)
                 total_amount = sale.total_amount
 
-                if paying_amount == 0:
-                    status = "UNPAID"
-                elif paying_amount >= total_amount:
-                    status = "PAID"
+                if amount_paid == 0:
+                    transaction_status = "UNPAID"
+                elif amount_paid >= total_amount:
+                    transaction_status = "PAID"
                 else:
-                    status = "PARTIALLY_PAID"
+                    transaction_status = "PARTIALLY_PAID"
 
                 Transaction.objects.create(
                     customer=sale.customer,
                     order=order,
                     transaction_type="DEBIT",
                     amount=total_amount,
-                    status=status,
+                    status=transaction_status,
                 )
 
         except serializers.ValidationError as e:

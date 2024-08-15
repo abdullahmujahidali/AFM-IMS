@@ -36,10 +36,12 @@ class SaleSerializer(serializers.ModelSerializer):
         queryset=Customer.objects.all(), source="customer", write_only=True
     )
     items = SaleProductSerializer(many=True, source="saleproduct_set")
-    paying_amount = serializers.DecimalField(
+    amount_paid = serializers.DecimalField(
         max_digits=10, decimal_places=2, required=False
     )
-    balance = serializers.DecimalField(max_digits=10, decimal_places=2, required=False)
+    balance = serializers.DecimalField(
+        max_digits=10, decimal_places=2, required=False, read_only=True
+    )
 
     class Meta:
         model = Sale
@@ -49,16 +51,15 @@ class SaleSerializer(serializers.ModelSerializer):
             "customer_id",
             "items",
             "total_amount",
-            "comments",
-            "paying_amount",
+            "amount_paid",
             "balance",
+            "comments",
             "created_at",
         ]
 
     def create(self, validated_data):
         products_data = validated_data.pop("saleproduct_set")
-        paying_amount = Decimal(validated_data.pop("paying_amount"))
-        balance = Decimal(validated_data.pop("balance"))
+        amount_paid = Decimal(validated_data.pop("amount_paid", 0))
 
         customer = validated_data["customer"]
         total_amount = Decimal(validated_data.pop("total_amount"))
@@ -70,15 +71,13 @@ class SaleSerializer(serializers.ModelSerializer):
         if abs(total_amount - calculated_total) > Decimal("0.01"):
             raise serializers.ValidationError("Total amount mismatch")
 
-        new_balance = customer.balance + (paying_amount - total_amount)
-
-        if abs(new_balance - balance) > Decimal("0.01"):
-            raise serializers.ValidationError("Balance mismatch")
-
+        new_balance = customer.balance - (total_amount - amount_paid)
         customer.balance = new_balance
         customer.save()
 
-        sale = Sale.objects.create(**validated_data, total_amount=total_amount)
+        sale = Sale.objects.create(
+            **validated_data, total_amount=total_amount, amount_paid=amount_paid
+        )
 
         for product_data in products_data:
             SaleProduct.objects.create(sale=sale, **product_data)

@@ -11,7 +11,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Skeleton } from "@/components/ui/skeleton";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import { toast, Toaster } from "sonner";
@@ -34,7 +34,6 @@ const secondaryNavigation = [
 ];
 
 export default function SettingsView() {
-  const [sidebarOpen, setSidebarOpen] = useState(false);
   const { data, error, isLoading } = useSWR("/api/v1/users/me/");
   const navigate = useNavigate();
 
@@ -54,7 +53,7 @@ export default function SettingsView() {
         email: data.email,
         password: "",
         first_name: data.first_name,
-        company_name: "", // Adjust this based on your actual data structure
+        company_name: data?.company?.name,
       });
     }
   }, [data, form]);
