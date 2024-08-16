@@ -8,3 +8,16 @@ Install PostgreSQL
 To start PostgreSQL
 
 `brew services start postgresql`
+
+
+
+employee management
+extra expense management
+attendance
+shahid uncle side
+roles and permission
+
+
+
+todo page
+pending orders

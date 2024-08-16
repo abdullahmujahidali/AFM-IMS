@@ -46,15 +46,25 @@ export default function Sidebar({
       name: "Sales",
       href: "/dashboard/sales/",
       icon: SignalIcon,
-      current: false,
+      current: currentPath.startsWith("/dashboard/sales"),
     },
-    { name: "Domains", href: "#", icon: GlobeAltIcon, current: false },
-    { name: "Usage", href: "#", icon: ChartBarSquareIcon, current: false },
+    {
+      name: "Invoices",
+      href: "/dashboard/invoices/",
+      icon: GlobeAltIcon,
+      current: currentPath.startsWith("/dashboard/invoices"),
+    },
+    {
+      name: "Statistics",
+      href: "/dashboard/stats/",
+      icon: ChartBarSquareIcon,
+      current: currentPath.startsWith("/dashboard/stats"),
+    },
     {
       name: "Settings",
       href: "/settings/company/",
       icon: Cog6ToothIcon,
-      current: currentPath.startsWith("/settings/company"),
+      current: currentPath.startsWith("/settings/"),
     },
   ];
   return (
