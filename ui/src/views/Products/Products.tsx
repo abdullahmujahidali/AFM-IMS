@@ -41,7 +41,7 @@ const formSchema = z.object({
   price: z.string(),
   product_type: z.string(),
   dimensions: z.string(),
-  stock_quantity: z.string().min(2),
+  stock_quantity: z.string().min(1),
   size: z.string(),
   description: z.string(),
 });
@@ -110,6 +110,7 @@ function ProductsView() {
         product_type: productObject.product_type || "",
         dimensions: productObject.dimensions || "",
         size: productObject.size || "",
+        stock_quantity: productObject.stock_quantity || "",
         description: productObject.description || "",
       });
       setValue(productObject.description || "");

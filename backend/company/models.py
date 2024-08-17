@@ -4,7 +4,6 @@ from django.db import models
 
 
 class Company(ID, Name, Dates):
-    name = models.CharField(max_length=255)
     slug = models.SlugField(unique=True, blank=True)
     status = models.BooleanField(default=False)
     owner = models.OneToOneField(

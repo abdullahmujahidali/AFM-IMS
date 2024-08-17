@@ -3,6 +3,7 @@ from aim.utils import generate_unique_slug
 from company.models import Company
 from company.serializers import CompanySerializer
 from django.db import transaction
+from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import status, viewsets
 from rest_framework.decorators import action
 from rest_framework.permissions import AllowAny, IsAuthenticated
@@ -16,6 +17,9 @@ from users.serializers import UserSerializer
 class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializer
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ["id"]
+    search_fields = ["first_name", "last_name", "email"]
     authentication_classes = [JWTAuthentication]
 
     def get_permissions(self):
@@ -66,3 +70,13 @@ class UserViewSet(viewsets.ModelViewSet):
             user_data["company"] = company_serializer.data
 
         return Response(user_data)
+
+    def update(self, request, pk=None):
+        pass
+
+    def partial_update(self, request, *args, **kwargs):
+        user = self.get_object()
+        serializer = self.get_serializer(user, data=request.data, partial=True)
+        serializer.is_valid(raise_exception=True)
+        self.perform_update(serializer)
+        return Response(serializer.data)
