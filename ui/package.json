@@ -64,6 +64,7 @@
     "zod": "^3.23.8"
   },
   "devDependencies": {
+    "@hookform/devtools": "^4.3.1",
     "@tailwindcss/aspect-ratio": "^0.4.2",
     "@tailwindcss/forms": "^0.5.7",
     "@tailwindcss/typography": "^0.5.13",

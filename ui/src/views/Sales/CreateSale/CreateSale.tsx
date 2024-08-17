@@ -121,7 +121,6 @@ function CreateSale() {
       const newBalance = selectedCustomer.balance - total + payingAmount;
       setCalculatedBalance(newBalance);
     } else {
-      console.log("lol");
       setCalculatedBalance(0);
     }
   };
@@ -196,7 +195,7 @@ function CreateSale() {
             Customer: {selectedCustomer.name}
           </h2>
           <p className="text-sm sm:text-base text-gray-600">
-            Initial Balance:{" "}
+            Initial Balance:
             <span className="font-medium">
               {selectedCustomer.balance.toFixed(2)}
             </span>
@@ -206,7 +205,6 @@ function CreateSale() {
 
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-          {/* Customer field */}
           <FormField
             control={form.control}
             name="customer_id"

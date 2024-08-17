@@ -9,6 +9,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { ListDataTable } from "@/components/ui/ListDataTable";
+import { CustomerTypes } from "@/constants/api-types";
 
 import {
   Form,
@@ -43,10 +44,11 @@ function CustomerView() {
   } = useSWR("/api/v1/customers/");
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
-  const [selectedCustomer, setSelectedCustomer] = useState(null); // Selected customer
+  const [selectedCustomer, setSelectedCustomer] =
+    useState<CustomerTypes | null>(null);
 
   const customersWithNegativeBalance = customersData?.results.filter(
-    (customer) => customer.balance < 0
+    (customer: CustomerTypes) => customer.balance < 0
   );
 
   const stats = [
@@ -86,7 +88,7 @@ function CustomerView() {
       fetchCustomer();
     } else {
       setSelectedCustomer(null);
-      form.reset(); // Reset form for new customer
+      form.reset();
     }
   }, [selectedCustomer, form]);
 
@@ -95,6 +97,7 @@ function CustomerView() {
       setSelectedCustomer(null);
       form.reset();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [open]);
 
   function onSubmit(values: z.infer<typeof formSchema>) {
@@ -129,13 +132,12 @@ function CustomerView() {
     { accessorKey: "created_at", header: "Created At" },
   ];
 
-  const handleRowClick = (customer) => {
-    setSelectedCustomer(customer); // Set the clicked customer
-    setOpen(true); // Open the dialog
+  const handleRowClick = (customer: CustomerTypes) => {
+    setSelectedCustomer(customer);
+    setOpen(true);
   };
 
-  const navigateToDetails = (customer) => {
-    console.log("customer: ", customer);
+  const navigateToDetails = (customer: CustomerTypes) => {
     navigate(`/dashboard/customers/${customer?.id}`);
   };
 

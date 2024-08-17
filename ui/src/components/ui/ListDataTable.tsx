@@ -59,7 +59,7 @@ export function ListDataTable({
   columns,
   mutate,
   type,
-  detailsNavigator,
+  // detailsNavigator,
   hidden = false,
   onRowClick,
 }) {
@@ -282,7 +282,7 @@ export function ListDataTable({
                 <TableRow
                   key={row.id}
                   data-state={row.getIsSelected() && "selected"}
-                  onClick={() => detailsNavigator(row.original)}
+                  // onClick={() => detailsNavigator(row.original)}
                   style={{ cursor: "pointer" }}
                 >
                   {row.getVisibleCells().map((cell) => (

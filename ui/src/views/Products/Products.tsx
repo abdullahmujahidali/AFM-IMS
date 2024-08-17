@@ -26,10 +26,12 @@ import {
   SheetHeader,
   SheetTitle,
 } from "@/components/ui/sheet";
+import { ProductTypes } from "@/constants/api-types";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect, useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
 import "react-quill/dist/quill.snow.css";
+import { useNavigate } from "react-router-dom";
 import { toast, Toaster } from "sonner";
 import useSWR from "swr";
 import { z } from "zod";
@@ -39,16 +41,18 @@ const formSchema = z.object({
   price: z.string(),
   product_type: z.string(),
   dimensions: z.string(),
-  quantity: z.string().min(2),
+  stock_quantity: z.string().min(2),
   size: z.string(),
   description: z.string(),
 });
 
 function ProductsView() {
   const [value, setValue] = useState("");
-  const [isSheetOpen, setIsSheetOpen] = useState(false); // Sheet visibility
-  const [selectedProduct, setSelectedProduct] = useState(null); // Selected product
-
+  const [isSheetOpen, setIsSheetOpen] = useState(false);
+  const [selectedProduct, setSelectedProduct] = useState<null | ProductTypes>(
+    null
+  );
+  const navigate = useNavigate();
   const {
     data: productsData,
     mutate,
@@ -59,19 +63,19 @@ function ProductsView() {
     selectedProduct ? `/api/v1/products/${selectedProduct.id}` : null
   );
 
-  // Calculate insights
   const totalStockQuantity =
     productsData?.results.reduce(
-      (acc, product) => acc + product.stock_quantity,
+      (acc: number, product: ProductTypes) => acc + product.stock_quantity,
       0
     ) || 0;
   const totalValue =
     productsData?.results.reduce(
-      (acc, product) => acc + product.price * product.stock_quantity,
+      (acc: number, product: ProductTypes) =>
+        acc + product.price * product.stock_quantity,
       0
     ) || 0;
   const lowStockProducts = productsData?.results.filter(
-    (product) => product.stock_quantity < 5
+    (product: ProductTypes) => product.stock_quantity < 5
   );
 
   const stats = [
@@ -91,7 +95,7 @@ function ProductsView() {
       name: "",
       price: "0.0",
       product_type: "",
-      quantity: "",
+      stock_quantity: "",
       dimensions: "",
       size: "",
       description: "",
@@ -124,7 +128,7 @@ function ProductsView() {
 
     request
       .then((data) => {
-        setIsSheetOpen(false); // Close the sheet after saving
+        setIsSheetOpen(false);
         toast.success(`Product ${data?.data?.name} saved!`);
         mutate();
       })
@@ -146,9 +150,13 @@ function ProductsView() {
     []
   );
 
-  const handleRowClick = (product) => {
+  const handleRowClick = (product: ProductTypes) => {
     setSelectedProduct(product); // Set the clicked product
     setIsSheetOpen(true); // Open the sheet
+  };
+
+  const navigateToDetails = (product: ProductTypes) => {
+    navigate(`/dashboard/products/${product?.id}`);
   };
 
   if (isLoading) return <div>Loading...</div>;
@@ -197,6 +205,7 @@ function ProductsView() {
         <ListDataTable
           onRowClick={handleRowClick}
           data={productsData.results}
+          detailsNavigator={navigateToDetails}
           mutate={mutate}
           columns={columns}
           type="Product"
@@ -250,6 +259,7 @@ function ProductsView() {
                       <Select
                         onValueChange={field.onChange}
                         defaultValue={field.value}
+                        value={field.value}
                       >
                         <FormControl>
                           <SelectTrigger className="w-full">
@@ -272,7 +282,7 @@ function ProductsView() {
                 />
                 <FormField
                   control={form.control}
-                  name="quantity"
+                  name="stock_quantity"
                   render={({ field }) => (
                     <FormItem className="text-left">
                       <FormLabel>Quantity</FormLabel>

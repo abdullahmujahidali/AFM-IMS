@@ -6,6 +6,7 @@ import {
   SheetTitle,
 } from "@/components/ui/sheet";
 
+import { SalesTypes } from "@/constants/api-types";
 import { formatDate } from "date-fns";
 import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -25,19 +26,19 @@ function SalesView() {
       const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
 
       const salesThisMonth = sales.filter(
-        (sale) => new Date(sale.created_at) >= startOfMonth
+        (sale: SalesTypes) => new Date(sale.created_at) >= startOfMonth
       );
       const salesToday = sales.filter(
-        (sale) =>
+        (sale: SalesTypes) =>
           new Date(sale.created_at).toDateString() === now.toDateString()
       );
 
       const totalSalesThisMonth = salesThisMonth.reduce(
-        (acc, sale) => acc + parseFloat(sale.total_amount),
+        (acc: number, sale: SalesTypes) => acc + parseFloat(sale.total_amount),
         0
       );
       const totalSalesToday = salesToday.reduce(
-        (acc, sale) => acc + parseFloat(sale.total_amount),
+        (acc: number, sale: SalesTypes) => acc + parseFloat(sale.total_amount),
         0
       );
 
@@ -66,7 +67,7 @@ function SalesView() {
     []
   );
 
-  const handleRowClick = (sale) => {
+  const handleRowClick = (sale: SalesTypes) => {
     navigate(`/dashboard/sales/edit/${sale.id}`);
   };
 
