@@ -20,7 +20,7 @@ import { z } from "zod";
 const formSchema = z.object({
   owner_name: z.string().min(3).max(50),
   slug: z.string(),
-  company_name: z.string(),
+  name: z.string(),
 });
 
 interface PersonalTypes {
@@ -36,14 +36,14 @@ export default function CompanySettings(props: PersonalTypes) {
     defaultValues: {
       owner_name: "",
       slug: "",
-      company_name: "",
+      name: "",
     },
   });
 
   useEffect(() => {
     if (data) {
       form.reset({
-        company_name: data?.name,
+        name: data?.name,
         slug: data?.slug,
         owner_name: data?.owner?.first_name,
       });
@@ -92,7 +92,7 @@ export default function CompanySettings(props: PersonalTypes) {
                 <>
                   <FormField
                     control={form.control}
-                    name="company_name"
+                    name="name"
                     render={({ field }) => (
                       <FormItem className="text-left">
                         <FormLabel>Company Name</FormLabel>
@@ -106,12 +106,15 @@ export default function CompanySettings(props: PersonalTypes) {
                   <FormField
                     control={form.control}
                     name="slug"
-                    disabled
                     render={({ field }) => (
                       <FormItem className="text-left">
                         <FormLabel>Unique Name</FormLabel>
                         <FormControl>
-                          <Input placeholder="microsoft-1" {...field} />
+                          <Input
+                            disabled
+                            placeholder="microsoft-1"
+                            {...field}
+                          />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -120,12 +123,11 @@ export default function CompanySettings(props: PersonalTypes) {
                   <FormField
                     control={form.control}
                     name="owner_name"
-                    disabled
                     render={({ field }) => (
                       <FormItem className="text-left">
                         <FormLabel>Owner Name</FormLabel>
                         <FormControl>
-                          <Input placeholder="John Doe" {...field} />
+                          <Input disabled placeholder="John Doe" {...field} />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
