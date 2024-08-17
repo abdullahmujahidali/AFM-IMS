@@ -11,6 +11,7 @@ import axiosInstance from "./axiosInstance";
 import NewLayout from "./components/ui/NewLayout";
 import DashboardLayout from "./layouts/DashboardLayout";
 import PublicViewLayout from "./layouts/PublicViewLayout";
+import SettingsLayout from "./layouts/SettingsLayout";
 import SignIn from "./views/Auth/Signin";
 import SignUp from "./views/Auth/Signup";
 import Dashboard from "./views/Customer/Customer";
@@ -128,9 +129,26 @@ const router = createBrowserRouter([
       },
       {
         path: "company",
+        element: <SettingsLayout />,
         children: [
           {
             path: "",
+            element: <SettingsView />,
+          },
+          {
+            path: "accounts",
+            element: <SettingsView />,
+          },
+          {
+            path: "teams",
+            element: <SettingsView />,
+          },
+          {
+            path: "notifications",
+            element: <SettingsView />,
+          },
+          {
+            path: "billing",
             element: <SettingsView />,
           },
         ],

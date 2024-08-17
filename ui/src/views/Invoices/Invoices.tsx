@@ -163,11 +163,11 @@ function InvoicesView() {
               <div className="h-2 w-2 rounded-full bg-current" />
             </div>
             <h1 className="flex gap-x-3 text-xl sm:text-2xl font-bold text-gray-900">
-              <span>Products</span>
+              <span>Invoices</span>
             </h1>
           </div>
           <p className="mt-1 text-sm sm:text-base text-gray-500">
-            List of all products that are your business offers.
+            List of all the invoices that has been created against a sale.
           </p>
         </div>
       </div>
