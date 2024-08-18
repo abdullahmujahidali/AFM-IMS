@@ -12,12 +12,10 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework_simplejwt.authentication import JWTAuthentication
 from sale.models import Sale, SaleProduct
-
-from .serializers import SaleSerializer
+from sale.serializers import SaleSerializer
 
 
 class SaleViewSet(viewsets.ModelViewSet):
-    queryset = Sale.objects.all()
     serializer_class = SaleSerializer
     authentication_classes = [JWTAuthentication]
     permission_classes = [IsAuthenticated]
@@ -25,10 +23,16 @@ class SaleViewSet(viewsets.ModelViewSet):
     filterset_fields = ["customer"]
 
     def get_queryset(self):
-        return Sale.objects.select_related("customer").prefetch_related(
-            Prefetch(
-                "saleproduct_set",
-                queryset=SaleProduct.objects.select_related("product"),
+        return (
+            Sale.objects.filter(customer__company=self.request.user.company)
+            .select_related("customer")
+            .prefetch_related(
+                Prefetch(
+                    "saleproduct_set",
+                    queryset=SaleProduct.objects.filter(
+                        product__company=self.request.user.company
+                    ).select_related("product"),
+                )
             )
         )
 
@@ -99,13 +103,10 @@ class SaleViewSet(viewsets.ModelViewSet):
 
     def destroy(self, request, *args, **kwargs):
         instance = self.get_object()
-        # Store related sale products before deleting the sale
         sale_products = instance.saleproduct_set.all()
 
-        # Delete the sale instance
         self.perform_destroy(instance)
 
-        # Revert stock_quantity and customer balance
         with transaction.atomic():
             for sale_product in sale_products:
                 product = sale_product.product

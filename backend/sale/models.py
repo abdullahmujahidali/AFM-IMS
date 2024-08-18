@@ -1,12 +1,12 @@
 # models.py
 
-from aim.abstract_models import ID, Dates
+from aim.abstract_models import ID, Dates, TenantModel
 from customer.models import Customer
 from django.db import models
 from products.models import Product
 
 
-class Sale(ID, Dates):
+class Sale(ID, TenantModel, Dates):
     customer = models.ForeignKey(
         Customer, on_delete=models.CASCADE, related_name="sales"
     )
@@ -19,7 +19,7 @@ class Sale(ID, Dates):
         return f"Sale {self.id} by {self.customer.name}"
 
 
-class SaleProduct(ID, Dates):
+class SaleProduct(ID, TenantModel, Dates):
     sale = models.ForeignKey(Sale, on_delete=models.CASCADE)
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     quantity = models.PositiveIntegerField(default=1)

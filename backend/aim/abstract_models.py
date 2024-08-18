@@ -41,3 +41,12 @@ class Name(models.Model):
 
     class Meta:
         abstract = True
+
+
+class TenantModel(models.Model):
+    company = models.ForeignKey(
+        to="company.Company", related_name="%(class)s", on_delete=models.CASCADE
+    )
+
+    class Meta:
+        abstract = True

@@ -1,4 +1,4 @@
-from aim.permissions import IsCompanyActive
+from aim.permissions import IsCompanyActive, IsOwnerOrAdmin
 from aim.utils import generate_unique_slug
 from company.models import Company
 from company.serializers import CompanySerializer
@@ -11,7 +11,7 @@ from rest_framework.response import Response
 from rest_framework_simplejwt.authentication import JWTAuthentication
 from usercompanyrelation.models import UserCompanyRelation
 from users.models import User
-from users.serializers import UserSerializer
+from users.serializers import UserCreateSerializer, UserSerializer
 
 
 class UserViewSet(viewsets.ModelViewSet):
@@ -22,28 +22,40 @@ class UserViewSet(viewsets.ModelViewSet):
     search_fields = ["first_name", "last_name", "email"]
     authentication_classes = [JWTAuthentication]
 
+    def get_serializer_class(self):
+        if self.action == "create":
+            return UserCreateSerializer
+        return UserSerializer
+
     def get_permissions(self):
         if self.action == "create":
             return [AllowAny()]
+        elif self.action in ["update", "partial_update", "destroy"]:
+            return [IsAuthenticated(), IsOwnerOrAdmin()]
         return [IsAuthenticated()]
+
+    def get_queryset(self):
+        if self.request.user.is_authenticated:
+            return User.objects.filter(company=self.request.user.company)
+        return User.objects.none()
 
     @transaction.atomic
     def create(self, request, *args, **kwargs):
-        user_serializer = self.get_serializer(data=request.data)
-        user_serializer.is_valid(raise_exception=True)
-        user = user_serializer.save()
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        user = serializer.save()
 
-        company_data = request.data.get("company_name")
-        if company_data:
-            slug = generate_unique_slug(company_data, Company)
-            company = Company.objects.create(name=company_data, owner=user, slug=slug)
+        company_name = request.data.get("company_name")
+        if company_name:
+            slug = generate_unique_slug(company_name, Company)
+            company = Company.objects.create(name=company_name, owner=user, slug=slug)
             user.company = company
             user.save()
             UserCompanyRelation.objects.create(user=user, company=company, role="Owner")
 
-        headers = self.get_success_headers(user_serializer.data)
+        headers = self.get_success_headers(serializer.data)
         return Response(
-            user_serializer.data, status=status.HTTP_201_CREATED, headers=headers
+            serializer.data, status=status.HTTP_201_CREATED, headers=headers
         )
 
     @action(
@@ -52,19 +64,19 @@ class UserViewSet(viewsets.ModelViewSet):
         permission_classes=[IsAuthenticated, IsCompanyActive],
     )
     def me(self, request):
-        """
-        Retrieve the details of the currently logged-in user along with company details.
-        """
         user = request.user
         user_serializer = self.get_serializer(user)
         user_data = user_serializer.data
         if user.company:
             company_serializer = CompanySerializer(user.company)
             user_data["company"] = company_serializer.data
-
         return Response(user_data)
 
-    @action(detail=True, methods=["patch"])
+    @action(
+        detail=True,
+        methods=["patch"],
+        permission_classes=[IsAuthenticated, IsOwnerOrAdmin],
+    )
     def update_role(self, request, pk=None):
         user = self.get_object()
         new_role = request.data.get("role")
@@ -74,44 +86,40 @@ class UserViewSet(viewsets.ModelViewSet):
                 {"error": "Role is required"}, status=status.HTTP_400_BAD_REQUEST
             )
 
-        try:
-            relation = UserCompanyRelation.objects.get(
-                user=user, company=request.user.company
-            )
-            relation.role = new_role
-            relation.save()
-            return Response(
-                {"message": "Role updated successfully"}, status=status.HTTP_200_OK
-            )
-        except UserCompanyRelation.DoesNotExist:
+        relation = UserCompanyRelation.objects.filter(
+            user=user, company=request.user.company
+        ).first()
+        if not relation:
             return Response(
                 {"error": "User-Company relation not found"},
                 status=status.HTTP_404_NOT_FOUND,
             )
 
-    @action(detail=False, methods=["post"])
+        relation.role = new_role
+        relation.save()
+        return Response(
+            {"message": "Role updated successfully"}, status=status.HTTP_200_OK
+        )
+
+    @action(
+        detail=False,
+        methods=["post"],
+        permission_classes=[IsAuthenticated, IsOwnerOrAdmin],
+    )
     @transaction.atomic
     def invite_user(self, request):
-        serializer = self.get_serializer(data=request.data)
+        serializer = UserCreateSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
 
-        # Get the company instance using the provided UUID
-        company_id = request.data.get("company")
-        try:
-            company = Company.objects.get(id=company_id)
-        except Company.DoesNotExist:
+        company = request.user.company
+        if not company:
             return Response(
-                {"error": "Invalid company ID"}, status=status.HTTP_400_BAD_REQUEST
+                {"error": "You are not associated with any company"},
+                status=status.HTTP_400_BAD_REQUEST,
             )
 
-        # Create the new user
         new_user = serializer.save(company=company)
-        new_user.company = company
-        new_user.save()
-        print("company: ", company)
-        print("dsfds: ", new_user.company)
 
-        # Create UserCompanyRelation
         UserCompanyRelation.objects.create(
             user=new_user,
             company=company,
@@ -123,9 +131,12 @@ class UserViewSet(viewsets.ModelViewSet):
             status=status.HTTP_201_CREATED,
         )
 
-    def partial_update(self, request, *args, **kwargs):
-        user = self.get_object()
-        serializer = self.get_serializer(user, data=request.data, partial=True)
+    def update(self, request, *args, **kwargs):
+        partial = kwargs.pop("partial", False)
+        instance = self.get_object()
+        serializer = self.get_serializer(instance, data=request.data, partial=partial)
         serializer.is_valid(raise_exception=True)
         self.perform_update(serializer)
         return Response(serializer.data)
+
+    partial_update = update

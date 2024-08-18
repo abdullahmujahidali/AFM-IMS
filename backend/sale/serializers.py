@@ -2,6 +2,7 @@ from decimal import Decimal
 
 from customer.models import Customer
 from products.models import Product
+from products.serializers import ProductSerializer
 from rest_framework import serializers
 
 from .models import Sale, SaleProduct
@@ -13,27 +14,33 @@ class CustomerSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
 
-class ProductSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Product
-        fields = "__all__"
-
-
 class SaleProductSerializer(serializers.ModelSerializer):
     product = ProductSerializer(read_only=True)
     product_id = serializers.PrimaryKeyRelatedField(
-        queryset=Product.objects.all(), source="product", write_only=True
+        queryset=Product.objects.all(),
+        source="product",
+        write_only=True,
     )
 
     class Meta:
         model = SaleProduct
         fields = ["product", "product_id", "quantity", "price"]
 
+    def __init__(self, *args, **kwargs):
+        super(SaleProductSerializer, self).__init__(*args, **kwargs)
+        request = self.context.get("request")
+        if request and request.user.is_authenticated:
+            self.fields["product_id"].queryset = Product.objects.for_company(
+                request.user.company
+            )
+
 
 class SaleSerializer(serializers.ModelSerializer):
     customer = CustomerSerializer(read_only=True)
     customer_id = serializers.PrimaryKeyRelatedField(
-        queryset=Customer.objects.all(), source="customer", write_only=True
+        queryset=Customer.objects.all(),
+        source="customer",
+        write_only=True,
     )
     items = SaleProductSerializer(many=True, source="saleproduct_set")
     amount_paid = serializers.DecimalField(
@@ -57,12 +64,28 @@ class SaleSerializer(serializers.ModelSerializer):
             "created_at",
         ]
 
+    def __init__(self, *args, **kwargs):
+        super(SaleSerializer, self).__init__(*args, **kwargs)
+        request = self.context.get("request")
+        if request and request.user.is_authenticated:
+            self.fields["customer_id"].queryset = Customer.objects.for_company(
+                request.user.company
+            )
+
     def create(self, validated_data):
         products_data = validated_data.pop("saleproduct_set")
         amount_paid = Decimal(validated_data.pop("amount_paid", 0))
 
         customer = validated_data["customer"]
         total_amount = Decimal(validated_data.pop("total_amount"))
+
+        # Ensure that all products belong to the user's company
+        for product_data in products_data:
+            product = product_data["product"]
+            if product.company != self.context["request"].user.company:
+                raise serializers.ValidationError(
+                    f"Product {product.name} does not belong to your company."
+                )
 
         calculated_total = sum(
             Decimal(product["price"]) * product["quantity"] for product in products_data

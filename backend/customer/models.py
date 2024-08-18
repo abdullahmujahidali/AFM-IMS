@@ -1,5 +1,6 @@
-from aim.abstract_models import ID, Dates, Name
+from aim.abstract_models import ID, Dates, Name, TenantModel
 from aim.validations import phone_validation
+from company.manager import TenantManager
 from django.db import models
 from products.models import Product
 
@@ -7,20 +8,19 @@ from products.models import Product
 class Customer(ID, Dates, Name):
     phone_number = models.CharField(max_length=15, validators=[phone_validation])
     balance = models.DecimalField(max_digits=10, default=0.0, decimal_places=2)
+    company = models.ForeignKey("company.Company", on_delete=models.CASCADE)
+
+    objects = TenantManager()
 
     @property
     def amount_owed(self):
-        """
-        Returns the absolute value of the balance if it's negative, indicating how much money the customer owes.
-        If the balance is positive or zero, returns 0.
-        """
         return abs(self.balance) if self.balance < 0 else 0
 
     def __str__(self):
         return f"{self.name} - {self.phone_number}"
 
 
-class Order(ID, Dates):
+class Order(ID, TenantModel, Dates):
     customer = models.ForeignKey(
         Customer, on_delete=models.CASCADE, related_name="orders"
     )
@@ -56,7 +56,7 @@ class OrderItem(ID):
         return f"{self.quantity} x {self.product.name} in Order {self.order.id}"
 
 
-class Transaction(ID, Dates):
+class Transaction(ID, Dates, TenantModel):
 
     TRANSACTION_TYPE_CHOICES = [
         ("DEBIT", "Debit"),

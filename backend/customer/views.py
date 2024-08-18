@@ -1,3 +1,5 @@
+from aim.permissions import IsCompanyActive
+from customer.models import Customer, Order, Transaction
 from customer.serializers import (
     CustomerSerializer,
     OrderSerializer,
@@ -9,39 +11,44 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework_simplejwt.authentication import JWTAuthentication
 
-from .models import Customer, Order, Transaction
-
 
 class CustomerViewSet(viewsets.ModelViewSet):
-    queryset = Customer.objects.all()
     serializer_class = CustomerSerializer
     authentication_classes = [JWTAuthentication]
     filter_backends = [DjangoFilterBackend]
     filterset_fields = ["id"]
 
     def get_permissions(self):
+        if self.action in ["create", "update", "partial_update", "destroy"]:
+            return [IsAuthenticated(), IsCompanyActive()]
         return [IsAuthenticated()]
 
-    def list(self, request, *args, **kwargs):
-        response = super().list(request, *args, **kwargs)
+    def get_queryset(self):
+        return Customer.objects.filter(company=self.request.user.company)
 
-        # Calculate the total amount owed
-        total_amount_owed = sum(
-            customer.amount_owed for customer in self.get_queryset()
+    def list(self, request, *args, **kwargs):
+        queryset = self.filter_queryset(self.get_queryset())
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        serializer = self.get_serializer(queryset, many=True)
+        total_amount_owed = sum(customer.amount_owed for customer in queryset)
+
+        return Response(
+            {
+                "count": queryset.count(),
+                "total_amount_owed": total_amount_owed,
+                "results": serializer.data,
+            }
         )
 
-        # Add the total amount owed and count to the response data
-        response.data = {
-            "count": response.data["count"],  # Add the count back to the response
-            "total_amount_owed": total_amount_owed,
-            "results": response.data["results"],
-        }
-
-        return response
+    def perform_create(self, serializer):
+        serializer.save(company=self.request.user.company)
 
 
 class OrderViewSet(viewsets.ModelViewSet):
-    queryset = Order.objects.all()
     serializer_class = OrderSerializer
     authentication_classes = [JWTAuthentication]
     permission_classes = [IsAuthenticated]
@@ -69,9 +76,15 @@ class OrderViewSet(viewsets.ModelViewSet):
 
 
 class TransactionViewSet(viewsets.ModelViewSet):
-    queryset = Transaction.objects.all()
     serializer_class = TransactionSerializer
     authentication_classes = [JWTAuthentication]
     permission_classes = [IsAuthenticated]
     filter_backends = [DjangoFilterBackend]
     filterset_fields = ["customer", "order"]
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        customer_id = self.request.query_params.get("customer", None)
+        if customer_id:
+            queryset = queryset.filter(customer=customer_id)
+        return queryset

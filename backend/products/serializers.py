@@ -2,7 +2,13 @@ from products.models import Product
 from rest_framework import serializers
 
 
-class ProductSerializer(serializers.ModelSerializer):
+class CompanyModelSerializer(serializers.ModelSerializer):
+    def create(self, validated_data):
+        validated_data["company"] = self.context["request"].company
+        return super().create(validated_data)
+
+
+class ProductSerializer(CompanyModelSerializer):
     class Meta:
         model = Product
         fields = [

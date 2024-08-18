@@ -20,6 +20,11 @@ class CustomerSerializer(serializers.ModelSerializer):
             "phone_number",
             "balance",
         ]
+        read_only_fields = ["company"]
+
+    def create(self, validated_data):
+        validated_data["company"] = self.context["request"].user.company
+        return super().create(validated_data)
 
 
 class CustomerListSerializer(serializers.ListSerializer):

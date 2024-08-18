@@ -13,14 +13,16 @@ import {
   DialogPanel,
   TransitionChild,
 } from "@headlessui/react";
+
 import { XMarkIcon } from "@heroicons/react/20/solid";
 import {
   ChartBarSquareIcon,
   Cog6ToothIcon,
   FolderIcon,
   GlobeAltIcon,
-  ServerIcon,
   SignalIcon,
+  UserIcon,
+  UsersIcon,
 } from "@heroicons/react/24/outline";
 import { useLocation } from "react-router-dom";
 import { Button } from "./button";
@@ -42,7 +44,7 @@ export default function Sidebar({
     {
       name: "Customers",
       href: "/dashboard/customers/",
-      icon: ServerIcon,
+      icon: UserIcon,
       current: currentPath.startsWith("/dashboard/customers"),
     },
     {
@@ -68,6 +70,12 @@ export default function Sidebar({
       href: "/dashboard/stats/",
       icon: ChartBarSquareIcon,
       current: currentPath.startsWith("/dashboard/stats"),
+    },
+    {
+      name: "Employee",
+      href: "/dashboard/customers/",
+      icon: UsersIcon,
+      current: currentPath.startsWith("/dashboard/customers"),
     },
     {
       name: "Settings",

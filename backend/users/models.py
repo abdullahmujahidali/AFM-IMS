@@ -2,6 +2,7 @@
 
 from uuid import uuid4
 
+from aim.abstract_models import TenantModel
 from aim.validations import phone_validation
 from django.contrib.auth.models import AbstractUser
 from django.db import models
@@ -14,13 +15,6 @@ class User(AbstractUser):
     id = models.UUIDField(default=uuid4, primary_key=True, editable=False)
     email = models.EmailField(_("email address"), unique=True)
     username = models.CharField(blank=True, null=True)
-    company = models.ForeignKey(
-        "company.Company",
-        on_delete=models.SET_NULL,
-        related_name="users",
-        null=True,
-        blank=True,
-    )
     phone_number = models.CharField(
         max_length=15, default="+923214567890", validators=[phone_validation]
     )
