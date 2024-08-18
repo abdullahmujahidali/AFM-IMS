@@ -1,9 +1,17 @@
 from rest_framework import serializers
+from usercompanyrelation.models import UserCompanyRelation
 from users.models import User
 
 
 class UserSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True)
+    role = serializers.SerializerMethodField()
+
+    def get_role(self, obj):
+        relation = UserCompanyRelation.objects.filter(user=obj).first()
+        if relation:
+            return relation.role
+        return None
 
     class Meta:
         model = User
@@ -13,8 +21,10 @@ class UserSerializer(serializers.ModelSerializer):
             "first_name",
             "last_name",
             "is_staff",
+            "company",
             "password",
             "phone_number",
+            "role",
         ]
         extra_kwargs = {"password": {"write_only": True}}
 

@@ -29,7 +29,6 @@ export default function SettingsLayout() {
       href: "billing",
       current: currentPath.startsWith("/settings/company/billing"),
     },
-    // { name: "Integrations", href: "#",  current: currentPath.startsWith("/dashboard/customers"), },
   ];
 
   return (

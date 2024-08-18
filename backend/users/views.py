@@ -18,7 +18,7 @@ class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializer
     filter_backends = [DjangoFilterBackend]
-    filterset_fields = ["id"]
+    filterset_fields = ["id", "company"]
     search_fields = ["first_name", "last_name", "email"]
     authentication_classes = [JWTAuthentication]
 
@@ -64,8 +64,64 @@ class UserViewSet(viewsets.ModelViewSet):
 
         return Response(user_data)
 
-    def update(self, request, pk=None):
-        pass
+    @action(detail=True, methods=["patch"])
+    def update_role(self, request, pk=None):
+        user = self.get_object()
+        new_role = request.data.get("role")
+
+        if not new_role:
+            return Response(
+                {"error": "Role is required"}, status=status.HTTP_400_BAD_REQUEST
+            )
+
+        try:
+            relation = UserCompanyRelation.objects.get(
+                user=user, company=request.user.company
+            )
+            relation.role = new_role
+            relation.save()
+            return Response(
+                {"message": "Role updated successfully"}, status=status.HTTP_200_OK
+            )
+        except UserCompanyRelation.DoesNotExist:
+            return Response(
+                {"error": "User-Company relation not found"},
+                status=status.HTTP_404_NOT_FOUND,
+            )
+
+    @action(detail=False, methods=["post"])
+    @transaction.atomic
+    def invite_user(self, request):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+
+        # Get the company instance using the provided UUID
+        company_id = request.data.get("company")
+        try:
+            company = Company.objects.get(id=company_id)
+        except Company.DoesNotExist:
+            return Response(
+                {"error": "Invalid company ID"}, status=status.HTTP_400_BAD_REQUEST
+            )
+
+        # Create the new user
+        new_user = serializer.save(company=company)
+        new_user.company = company
+        new_user.save()
+        print("company: ", company)
+        print("dsfds: ", new_user.company)
+
+        # Create UserCompanyRelation
+        UserCompanyRelation.objects.create(
+            user=new_user,
+            company=company,
+            role="Member",
+        )
+
+        return Response(
+            {"message": f"User {new_user.email} invited successfully"},
+            status=status.HTTP_201_CREATED,
+        )
 
     def partial_update(self, request, *args, **kwargs):
         user = self.get_object()

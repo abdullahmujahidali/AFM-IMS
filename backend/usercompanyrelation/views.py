@@ -2,7 +2,9 @@ from rest_framework import status, viewsets
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework_simplejwt.authentication import JWTAuthentication
+from users.models import User
 from usercompanyrelation.models import UserCompanyRelation
+from usercompanyrelation.serializers import UserCompanyRelationSerializer
 
 
 class InviteViewSet(viewsets.ViewSet):
@@ -13,6 +15,8 @@ class InviteViewSet(viewsets.ViewSet):
     def create(self, request, *args, **kwargs):
         # Invite a user
         # Implementation logic to invite a user
+        # user = User.object.get()
+        print("request: ", request.data)
         pass
 
     def update(self, request, *args, **kwargs):

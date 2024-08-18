@@ -36,7 +36,6 @@ function SignUp() {
   });
 
   function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log("values: ", values);
     axiosInstance
       .post("api/v1/users/", values)
       .then((data) => {

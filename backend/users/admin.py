@@ -11,6 +11,7 @@ class UserAdmin(admin.ModelAdmin):
         "last_name",
         "is_staff",
         "is_active",
+        "company",
         "date_joined",
     )
     list_filter = ("is_staff", "is_active", "date_joined")

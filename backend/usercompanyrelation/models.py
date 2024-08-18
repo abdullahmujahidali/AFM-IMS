@@ -20,7 +20,7 @@ class UserCompanyRelation(models.Model):
     company = models.ForeignKey(
         "company.Company", on_delete=models.CASCADE, related_name="user_roles"
     )
-    role = models.CharField(max_length=50, choices=ROLE_CHOICES)
+    role = models.CharField(max_length=50, default="Member", choices=ROLE_CHOICES)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 

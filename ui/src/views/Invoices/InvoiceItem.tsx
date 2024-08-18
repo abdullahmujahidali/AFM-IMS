@@ -23,7 +23,7 @@ export default function InvoiceDetails() {
     return format(parseISO(dateString), "MMMM dd, yyyy");
   };
 
-  const handleDownload = async (format) => {
+  const handleDownload = async (format: string) => {
     setIsDownloading(true);
     try {
       const element = invoiceRef.current;
@@ -49,7 +49,6 @@ export default function InvoiceDetails() {
       }
     } catch (error) {
       console.error("Error generating download:", error);
-      // Handle error (e.g., show an error message to the user)
     } finally {
       setIsDownloading(false);
     }

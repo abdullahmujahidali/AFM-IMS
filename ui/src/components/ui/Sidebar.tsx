@@ -1,3 +1,11 @@
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { Skeleton } from "@/components/ui/skeleton";
 import {
   Dialog,
@@ -15,6 +23,7 @@ import {
   SignalIcon,
 } from "@heroicons/react/24/outline";
 import { useLocation } from "react-router-dom";
+import { Button } from "./button";
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
@@ -62,7 +71,7 @@ export default function Sidebar({
     },
     {
       name: "Settings",
-      href: "/settings/company/",
+      href: "/settings/company/accounts/",
       icon: Cog6ToothIcon,
       current: currentPath.startsWith("/settings/"),
     },
@@ -136,23 +145,45 @@ export default function Sidebar({
                   <li className="-mx-6 mt-auto">
                     <a
                       href="#"
-                      className="flex items-center gap-x-4 px-6 py-3 text-sm font-semibold leading-6 text-black   hover:bg-gray-600"
+                      className="flex items-center gap-x-4 px-6 py-3 text-sm font-semibold leading-6 text-black hover:bg-gray-400"
                     >
-                      <img
-                        alt=""
-                        src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
-                        className="h-8 w-8 rounded-full bg-gray-800"
-                      />
+                      <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            className="hover:bg-gray-400"
+                          >
+                            <img
+                              src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
+                              width={36}
+                              height={36}
+                              alt="Avatar"
+                              className="rounded-full"
+                              style={{
+                                aspectRatio: "36/36",
+                                objectFit: "cover",
+                              }}
+                            />
+                          </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align="end">
+                          <DropdownMenuLabel>My Account</DropdownMenuLabel>
+                          <DropdownMenuSeparator />
+                          <DropdownMenuItem>Profile</DropdownMenuItem>
+                          <DropdownMenuItem>Billing</DropdownMenuItem>
+                          <DropdownMenuItem>Settings</DropdownMenuItem>
+                          <DropdownMenuSeparator />
+                          <DropdownMenuItem>Logout</DropdownMenuItem>
+                        </DropdownMenuContent>
+                      </DropdownMenu>
                       <span className="sr-only">Your profile</span>
-                      <span
-                        aria-hidden="true"
-                        className="text-black hover:text-white"
-                      >
+                      <span className="text-black" aria-hidden="true">
                         {isLoading ? (
                           <Skeleton className="h-4 w-[120px]" />
                         ) : (
                           data?.first_name
-                        )}{" "}
+                        )}
                       </span>
                     </a>
                   </li>
@@ -200,11 +231,33 @@ export default function Sidebar({
                   href="#"
                   className="flex items-center gap-x-4 px-6 py-3 text-sm font-semibold leading-6 text-black hover:bg-gray-400"
                 >
-                  <img
-                    alt=""
-                    src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
-                    className="h-8 w-8 rounded-full bg-gray-800"
-                  />
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        className="hover:bg-gray-400"
+                      >
+                        <img
+                          src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
+                          width={36}
+                          height={36}
+                          alt="Avatar"
+                          className="rounded-full"
+                          style={{ aspectRatio: "36/36", objectFit: "cover" }}
+                        />
+                      </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="end">
+                      <DropdownMenuLabel>My Account</DropdownMenuLabel>
+                      <DropdownMenuSeparator />
+                      <DropdownMenuItem>Profile</DropdownMenuItem>
+                      <DropdownMenuItem>Billing</DropdownMenuItem>
+                      <DropdownMenuItem>Settings</DropdownMenuItem>
+                      <DropdownMenuSeparator />
+                      <DropdownMenuItem>Logout</DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
                   <span className="sr-only">Your profile</span>
                   <span className="text-black" aria-hidden="true">
                     {isLoading ? (

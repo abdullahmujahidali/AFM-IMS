@@ -22,7 +22,9 @@ import Landing from "./views/Landing/Landing";
 import ProductsView from "./views/Products/Products";
 import CreateSale from "./views/Sales/CreateSale/CreateSale";
 import SalesView from "./views/Sales/Sales";
-import SettingsView from "./views/Settings/Settings";
+import SettingsView from "./views/Settings/AccountSettings";
+import BillingSettingsView from "./views/Settings/BillingSettings";
+import TeamSettingsView from "./views/Settings/TeamsSettings";
 import StatisticsView from "./views/Statistics/Statistics";
 
 const router = createBrowserRouter([
@@ -141,7 +143,7 @@ const router = createBrowserRouter([
           },
           {
             path: "teams",
-            element: <SettingsView />,
+            element: <TeamSettingsView />,
           },
           {
             path: "notifications",
@@ -149,7 +151,7 @@ const router = createBrowserRouter([
           },
           {
             path: "billing",
-            element: <SettingsView />,
+            element: <BillingSettingsView />,
           },
         ],
       },
