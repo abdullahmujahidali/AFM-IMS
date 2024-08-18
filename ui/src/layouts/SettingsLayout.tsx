@@ -11,23 +11,23 @@ export default function SettingsLayout() {
   const secondaryNavigation = [
     {
       name: "Account",
-      href: "accounts",
-      current: currentPath.startsWith("/settings/company/accounts"),
+      href: "/settings/accounts/",
+      current: currentPath.startsWith("/settings/accounts"),
     },
     {
       name: "Teams",
-      href: "teams",
-      current: currentPath.startsWith("/settings/company/teams"),
+      href: "/settings/teams/",
+      current: currentPath.startsWith("/settings/teams"),
     },
     {
       name: "Notifications",
-      href: "notifications",
-      current: currentPath.startsWith("/settings/company/notifications"),
+      href: "/settings/notifications/",
+      current: currentPath.startsWith("/settings/notifications"),
     },
     {
       name: "Billing",
-      href: "billing",
-      current: currentPath.startsWith("/settings/company/billing"),
+      href: "/settings/billing/",
+      current: currentPath.startsWith("/settings/billing"),
     },
   ];
 

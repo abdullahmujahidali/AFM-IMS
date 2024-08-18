@@ -71,7 +71,7 @@ export default function Sidebar({
     },
     {
       name: "Settings",
-      href: "/settings/company/accounts/",
+      href: "/settings/accounts/",
       icon: Cog6ToothIcon,
       current: currentPath.startsWith("/settings/"),
     },
