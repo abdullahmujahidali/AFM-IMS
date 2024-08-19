@@ -1,3 +1,5 @@
+# sale/serializer.py
+
 from decimal import Decimal
 
 from customer.models import Customer
@@ -30,8 +32,8 @@ class SaleProductSerializer(serializers.ModelSerializer):
         super(SaleProductSerializer, self).__init__(*args, **kwargs)
         request = self.context.get("request")
         if request and request.user.is_authenticated:
-            self.fields["product_id"].queryset = Product.objects.for_company(
-                request.user.company
+            self.fields["product_id"].queryset = Product.objects.filter(
+                company=request.company
             )
 
 
@@ -67,22 +69,20 @@ class SaleSerializer(serializers.ModelSerializer):
     def __init__(self, *args, **kwargs):
         super(SaleSerializer, self).__init__(*args, **kwargs)
         request = self.context.get("request")
-        if request and request.user.is_authenticated:
-            self.fields["customer_id"].queryset = Customer.objects.for_company(
-                request.user.company
+        if request and hasattr(request, "user") and request.user.is_authenticated:
+            self.fields["customer_id"].queryset = Customer.objects.filter(
+                company=request.company
             )
 
     def create(self, validated_data):
         products_data = validated_data.pop("saleproduct_set")
         amount_paid = Decimal(validated_data.pop("amount_paid", 0))
-
         customer = validated_data["customer"]
         total_amount = Decimal(validated_data.pop("total_amount"))
 
-        # Ensure that all products belong to the user's company
         for product_data in products_data:
             product = product_data["product"]
-            if product.company != self.context["request"].user.company:
+            if product.company != self.context["request"].company:
                 raise serializers.ValidationError(
                     f"Product {product.name} does not belong to your company."
                 )
@@ -99,11 +99,14 @@ class SaleSerializer(serializers.ModelSerializer):
         customer.save()
 
         sale = Sale.objects.create(
-            **validated_data, total_amount=total_amount, amount_paid=amount_paid
+            **validated_data,
+            total_amount=total_amount,
+            amount_paid=amount_paid,
+            company=self.context["request"].company,
         )
 
         for product_data in products_data:
-            SaleProduct.objects.create(sale=sale, **product_data)
+            SaleProduct.objects.create(sale=sale, **product_data, company=sale.company)
 
         return sale
 

@@ -1,4 +1,4 @@
-# models.py
+# sale/models.py
 
 from aim.abstract_models import ID, CompanyAwareModel, Dates
 from customer.models import Customer

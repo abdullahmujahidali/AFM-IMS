@@ -1,5 +1,8 @@
+# sale/view.py
+
 from decimal import Decimal
 
+from aim.mixins import IsAdminPermissionMixin
 from customer.models import Order, OrderItem, Transaction
 from django.db import transaction
 from django.db.models import Prefetch
@@ -15,22 +18,20 @@ from sale.models import Sale, SaleProduct
 from sale.serializers import SaleSerializer
 
 
-class SaleViewSet(viewsets.ModelViewSet):
+class SaleViewSet(IsAdminPermissionMixin, viewsets.ModelViewSet):
     serializer_class = SaleSerializer
-    authentication_classes = [JWTAuthentication]
-    permission_classes = [IsAuthenticated]
     filter_backends = [DjangoFilterBackend]
     filterset_fields = ["customer"]
 
     def get_queryset(self):
         return (
-            Sale.objects.filter(customer__company=self.request.user.company)
+            Sale.objects.filter(customer__company=self.request.company)
             .select_related("customer")
             .prefetch_related(
                 Prefetch(
                     "saleproduct_set",
                     queryset=SaleProduct.objects.filter(
-                        product__company=self.request.user.company
+                        product__company=self.request.company
                     ).select_related("product"),
                 )
             )
@@ -46,6 +47,7 @@ class SaleViewSet(viewsets.ModelViewSet):
                 order = Order.objects.create(
                     customer=sale.customer,
                     total_price=sale.total_amount,
+                    company=self.request.company,
                     status="PENDING",
                 )
 
@@ -78,6 +80,7 @@ class SaleViewSet(viewsets.ModelViewSet):
                 Transaction.objects.create(
                     customer=sale.customer,
                     order=order,
+                    company=self.request.company,
                     transaction_type="DEBIT",
                     amount=total_amount,
                     status=transaction_status,

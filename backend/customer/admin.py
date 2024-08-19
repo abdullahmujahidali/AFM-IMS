@@ -6,7 +6,7 @@ from .models import Customer, Order, OrderItem, Transaction
 
 @admin.register(Customer)
 class CustomerAdmin(admin.ModelAdmin):
-    list_display = ("name", "phone_number", "created_at")
+    list_display = ("name", "phone_number", "created_at", "id")
     search_fields = ("name", "phone_number")
     list_filter = ("created_at",)
 
