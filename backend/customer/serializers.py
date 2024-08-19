@@ -23,7 +23,7 @@ class CustomerSerializer(serializers.ModelSerializer):
         read_only_fields = ["company"]
 
     def create(self, validated_data):
-        validated_data["company"] = self.context["request"].user.company
+        validated_data["company"] = self.context["request"].company
         return super().create(validated_data)
 
 

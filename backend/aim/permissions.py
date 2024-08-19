@@ -26,20 +26,19 @@ class IsOwnerOrAdmin(BasePermission):
 
 class IsLoggedIn(BasePermission):
     """This permission class is used to check whether the authenticated
-    user is logged in a company or not."""
+    user is logged in a tenant or not."""
 
     def has_permission(self, request, view):
         """Overriding this method to implement how permissions
         are going to be determined."""
         try:
             user = User.objects.get(email=request.user.email)
-            print("user is here: ", user)
-            relation = UserCompanyRelation.objects.select_related("company").get(
-                user=user
-            )
-            print("relation: ", relation.company)
-            request.li_relation = relation
-            request.company = relation.company
-            return True
+            relation = UserCompanyRelation.objects.select_related(
+                "role", "company"
+            ).get(user=user)
         except UserCompanyRelation.DoesNotExist:
             return False
+        request.li_relation = relation
+        request.company = relation.company
+        request.role = relation.role
+        return True

@@ -1,10 +1,12 @@
-from aim.permissions import IsCompanyActive
+from aim.mixins import IsAdminPermissionMixin
+from aim.permissions import IsCompanyActive, IsLoggedIn
 from customer.models import Customer, Order, Transaction
 from customer.serializers import (
     CustomerSerializer,
     OrderSerializer,
     TransactionSerializer,
 )
+from django.shortcuts import get_object_or_404
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import viewsets
 from rest_framework.permissions import IsAuthenticated
@@ -12,17 +14,17 @@ from rest_framework.response import Response
 from rest_framework_simplejwt.authentication import JWTAuthentication
 
 
-class CustomerViewSet(viewsets.ModelViewSet):
+class CustomerViewSet(IsAdminPermissionMixin, viewsets.ModelViewSet):
     serializer_class = CustomerSerializer
-    authentication_classes = [JWTAuthentication]
     filter_backends = [DjangoFilterBackend]
     filterset_fields = ["id"]
 
-    def get_queryset(self):
-        return Customer.objects.filter(company=self.request.company)
+    def get_object(self):
+        item = self.kwargs.get("pk")
+        return get_object_or_404(Customer, pk=item, company=self.request.company)
 
     def list(self, request, *args, **kwargs):
-        queryset = self.filter_queryset(self.get_queryset())
+        queryset = Customer.objects.filter(company=request.company)
         page = self.paginate_queryset(queryset)
         if page is not None:
             serializer = self.get_serializer(page, many=True)
@@ -40,22 +42,21 @@ class CustomerViewSet(viewsets.ModelViewSet):
         )
 
     def perform_create(self, serializer):
-        serializer.save(company=self.request.user.company)
+        serializer.save(company=self.request.company)
 
 
-class OrderViewSet(viewsets.ModelViewSet):
+class OrderViewSet(IsAdminPermissionMixin, viewsets.ModelViewSet):
     serializer_class = OrderSerializer
-    authentication_classes = [JWTAuthentication]
-    permission_classes = [IsAuthenticated]
     filter_backends = [DjangoFilterBackend]
     filterset_fields = ["customer"]
 
     def get_queryset(self):
-        queryset = super().get_queryset()
-        customer_id = self.request.query_params.get("customer", None)
-        if customer_id:
-            queryset = queryset.filter(customer=customer_id)
-        return queryset
+        return Order.objects.filter(customer__company=self.request.company)
+
+    def get_object(self, request, *args, **kwargs):
+        print("request: ", request)
+        item = self.kwargs.get("pk")
+        return get_object_or_404(Order, request, pk=item)
 
     def perform_create(self, serializer):
         order = serializer.save()
@@ -78,8 +79,4 @@ class TransactionViewSet(viewsets.ModelViewSet):
     filterset_fields = ["customer", "order"]
 
     def get_queryset(self):
-        queryset = super().get_queryset()
-        customer_id = self.request.query_params.get("customer", None)
-        if customer_id:
-            queryset = queryset.filter(customer=customer_id)
-        return queryset
+        return Transaction.objects.filter(customer__company=self.request.company)

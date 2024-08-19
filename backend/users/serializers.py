@@ -28,7 +28,7 @@ class UserSerializer(serializers.ModelSerializer):
 
     def get_role(self, obj):
         user_company_relation = UserCompanyRelation.objects.get(user=obj)
-        return user_company_relation.role
+        return user_company_relation.role.type
 
     def get_company(self, obj):
         company_object = Company.objects.get(owner=obj)
