@@ -69,7 +69,7 @@ MIDDLEWARE = [
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     "allauth.account.middleware.AccountMiddleware",
-    "aim.middleware.CompanyMiddleware",
+    "aim.middlewares.attributes.CustomAttrsMiddleware",
 ]
 
 ROOT_URLCONF = "aim.urls"

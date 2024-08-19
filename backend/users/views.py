@@ -1,4 +1,4 @@
-from aim.permissions import IsCompanyActive, IsOwnerOrAdmin
+from aim.permissions import IsCompanyActive, IsLoggedIn, IsOwnerOrAdmin
 from aim.utils import generate_unique_slug
 from company.models import Company
 from company.serializers import CompanySerializer
@@ -34,6 +34,12 @@ class UserViewSet(viewsets.ModelViewSet):
             return [IsAuthenticated(), IsOwnerOrAdmin()]
         return [IsAuthenticated()]
 
+    def perform_authentication(self, request):
+        if self.action in ["create"]:
+            return None
+        else:
+            return request.user
+
     def get_queryset(self):
         if self.request.user.is_authenticated:
             return User.objects.filter(company=self.request.user.company)
@@ -61,16 +67,12 @@ class UserViewSet(viewsets.ModelViewSet):
     @action(
         detail=False,
         methods=["get"],
-        permission_classes=[IsAuthenticated, IsCompanyActive],
+        permission_classes=[IsAuthenticated],
     )
     def me(self, request):
         user = request.user
-        user_serializer = self.get_serializer(user)
-        user_data = user_serializer.data
-        if user.company:
-            company_serializer = CompanySerializer(user.company)
-            user_data["company"] = company_serializer.data
-        return Response(user_data)
+        serializer = self.get_serializer(user, context={"request": request})
+        return Response(serializer.data)
 
     @action(
         detail=True,

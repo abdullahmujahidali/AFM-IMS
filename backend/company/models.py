@@ -16,4 +16,4 @@ class Company(ID, Name, Dates):
         super().save(*args, **kwargs)
 
     def __str__(self):
-        return self.name
+        return self.name + "-" + self.slug

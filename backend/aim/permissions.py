@@ -39,9 +39,11 @@ class IsLoggedIn(BasePermission):
             relation = UserCompanyRelation.objects.select_related(
                 "role", "company"
             ).get(user=user)
+            print("hello: ", user)
         except UserCompanyRelation.DoesNotExist:
             return False
         request.li_relation = relation
         request.company = relation.company
         request.role = relation.role
+        print("request: ", request.company)
         return True

@@ -23,7 +23,6 @@ class Command(BaseCommand):
         user.set_password("testpass123")
         user.save()
 
-        # Creating users, tenant
         org = Company.objects.create(name="Microsoft", owner=user, status=True)
         UserCompanyRelation.objects.create(company=org, user=user, role="Owner")
         self.stdout.write(self.style.SUCCESS("Customers imported :)"))

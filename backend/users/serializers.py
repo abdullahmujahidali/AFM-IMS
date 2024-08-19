@@ -1,30 +1,43 @@
+import logging
+
+from company.models import Company
 from rest_framework import serializers
 from usercompanyrelation.models import UserCompanyRelation
 from users.models import User
 
+logger = logging.getLogger(__name__)
+
 
 class UserSerializer(serializers.ModelSerializer):
     role = serializers.SerializerMethodField()
-
-    def get_role(self, obj):
-        relation = UserCompanyRelation.objects.filter(
-            user=obj, company=obj.company
-        ).first()
-        return relation.role if relation else None
+    company = serializers.SerializerMethodField()
 
     class Meta:
         model = User
         fields = [
             "id",
             "email",
+            "company",
             "first_name",
             "last_name",
             "is_staff",
-            "company",
             "phone_number",
             "role",
         ]
-        read_only_fields = ["company", "is_staff"]
+        read_only_fields = ["is_staff"]
+
+    def get_role(self, obj):
+        user_tenant_relation = UserCompanyRelation.objects.get(user=obj)
+        return user_tenant_relation.role
+
+    def get_company(self, obj):
+        company_object = Company.objects.get(owner=obj)
+        comp = {
+            "slug": company_object.slug,
+            "status": company_object.status,
+            "name": company_object.name,
+        }
+        return comp
 
     def update(self, instance, validated_data):
         if "password" in validated_data:
