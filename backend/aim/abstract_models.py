@@ -43,9 +43,39 @@ class Name(models.Model):
         abstract = True
 
 
-class TenantModel(models.Model):
+class CompanyAwareModel(models.Model):
+    """This abstract class is inherited in all other models who create a FK relation with Company model."""
+
     company = models.ForeignKey(
         to="company.Company", related_name="%(class)s", on_delete=models.CASCADE
+    )
+
+    class Meta:
+        abstract = True
+
+
+class UserAwareModel(models.Model):
+    """
+    This is an abstract class which contains a foreign key to the
+    BaseUser table.
+    """
+
+    user = models.ForeignKey(
+        to="users.User", on_delete=models.CASCADE, related_name="%(class)s"
+    )
+
+    class Meta:
+        abstract = True
+
+
+class RoleAwareModel(models.Model):
+    """This abstract model adds a foreign key to the inheritee model."""
+
+    role = models.ForeignKey(
+        to="usercompanyrelation.Role",
+        to_field="type",
+        on_delete=models.CASCADE,
+        related_name="%(class)s",
     )
 
     class Meta:

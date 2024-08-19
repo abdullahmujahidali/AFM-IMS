@@ -5,8 +5,12 @@ class CustomAttrsMiddleware:
         self.get_response = get_response
 
     def __call__(self, request):
-        request.li_relation = None
-        request.company = None
-        request.role = None
+        if not hasattr(request, "li_relation"):
+            request.li_relation = None
+        if not hasattr(request, "company"):
+            request.company = None
+        if not hasattr(request, "role"):
+            request.role = None
+
         response = self.get_response(request)
         return response

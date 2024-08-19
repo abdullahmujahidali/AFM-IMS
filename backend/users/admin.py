@@ -1,7 +1,7 @@
 from django.contrib import admin
 
 from .models import User
-
+from usercompanyrelation.models import UserCompanyRelation
 
 @admin.register(User)
 class UserAdmin(admin.ModelAdmin):
@@ -42,3 +42,15 @@ class UserAdmin(admin.ModelAdmin):
             },
         ),
     )
+
+
+@admin.register(UserCompanyRelation)
+class UserCompanyRelation(admin.ModelAdmin):
+    """This inline model admin displays all the relations of a user with tenant inside User model."""
+
+    list_display = [
+        "user",
+        "company",
+        "role",
+    ]
+    list_select_related = ("user", "company", "role")

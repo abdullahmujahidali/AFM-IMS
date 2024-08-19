@@ -18,13 +18,8 @@ class CustomerViewSet(viewsets.ModelViewSet):
     filter_backends = [DjangoFilterBackend]
     filterset_fields = ["id"]
 
-    def get_permissions(self):
-        if self.action in ["create", "update", "partial_update", "destroy"]:
-            return [IsAuthenticated(), IsCompanyActive()]
-        return [IsAuthenticated()]
-
     def get_queryset(self):
-        return Customer.objects.filter(company=self.request.user.company)
+        return Customer.objects.filter(company=self.request.company)
 
     def list(self, request, *args, **kwargs):
         queryset = self.filter_queryset(self.get_queryset())

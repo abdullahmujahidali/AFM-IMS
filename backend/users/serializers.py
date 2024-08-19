@@ -27,8 +27,8 @@ class UserSerializer(serializers.ModelSerializer):
         read_only_fields = ["is_staff"]
 
     def get_role(self, obj):
-        user_tenant_relation = UserCompanyRelation.objects.get(user=obj)
-        return user_tenant_relation.role
+        user_company_relation = UserCompanyRelation.objects.get(user=obj)
+        return user_company_relation.role
 
     def get_company(self, obj):
         company_object = Company.objects.get(owner=obj)

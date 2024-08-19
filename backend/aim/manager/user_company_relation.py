@@ -1,9 +1,9 @@
 from bulk_update_or_create.query import BulkUpdateOrCreateQuerySet
 
 
-class UserTenantRelationManager(BulkUpdateOrCreateQuerySet):
-    """Custom manager for UserTenantRelation model. Help create different\
-        kinds of relations between tenant and user\
+class UserCompanyRelationManager(BulkUpdateOrCreateQuerySet):
+    """Custom manager for UserCompanyRelation model. Help create different\
+        kinds of relations between company and user\
         depending on the role. And all of these methods are\
         being used in testing."""
 

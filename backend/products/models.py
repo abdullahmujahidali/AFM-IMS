@@ -1,8 +1,8 @@
-from aim.abstract_models import ID, Dates, Name, TenantModel
+from aim.abstract_models import ID, CompanyAwareModel, Dates, Name
 from django.db import models
 
 
-class Product(ID, Dates, Name, TenantModel):
+class Product(ID, Dates, Name, CompanyAwareModel):
     price = models.DecimalField(default=0.0, max_digits=10, decimal_places=2)
     product_type = models.CharField(
         max_length=20,

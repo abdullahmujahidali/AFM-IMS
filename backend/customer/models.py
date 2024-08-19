@@ -1,16 +1,13 @@
-from aim.abstract_models import ID, Dates, Name, TenantModel
+from aim.abstract_models import ID, CompanyAwareModel, Dates, Name
 from aim.validations import phone_validation
-from company.manager import TenantManager
 from django.db import models
 from products.models import Product
 
 
-class Customer(ID, Dates, Name):
+class Customer(CompanyAwareModel, ID, Dates, Name):
     phone_number = models.CharField(max_length=15, validators=[phone_validation])
     balance = models.DecimalField(max_digits=10, default=0.0, decimal_places=2)
     company = models.ForeignKey("company.Company", on_delete=models.CASCADE)
-
-    objects = TenantManager()
 
     @property
     def amount_owed(self):
@@ -20,7 +17,7 @@ class Customer(ID, Dates, Name):
         return f"{self.name} - {self.phone_number}"
 
 
-class Order(ID, TenantModel, Dates):
+class Order(ID, CompanyAwareModel, Dates):
     customer = models.ForeignKey(
         Customer, on_delete=models.CASCADE, related_name="orders"
     )
@@ -56,7 +53,7 @@ class OrderItem(ID):
         return f"{self.quantity} x {self.product.name} in Order {self.order.id}"
 
 
-class Transaction(ID, Dates, TenantModel):
+class Transaction(ID, Dates, CompanyAwareModel):
 
     TRANSACTION_TYPE_CHOICES = [
         ("DEBIT", "Debit"),

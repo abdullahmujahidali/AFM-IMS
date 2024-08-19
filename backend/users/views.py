@@ -9,7 +9,7 @@ from rest_framework.decorators import action
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework_simplejwt.authentication import JWTAuthentication
-from usercompanyrelation.models import UserCompanyRelation
+from usercompanyrelation.models import Role, UserCompanyRelation
 from users.models import User
 from users.serializers import UserCreateSerializer, UserSerializer
 
@@ -31,7 +31,7 @@ class UserViewSet(viewsets.ModelViewSet):
         if self.action == "create":
             return [AllowAny()]
         elif self.action in ["update", "partial_update", "destroy"]:
-            return [IsAuthenticated(), IsOwnerOrAdmin()]
+            return [IsAuthenticated(), IsOwnerOrAdmin(), IsLoggedIn()]
         return [IsAuthenticated()]
 
     def perform_authentication(self, request):
@@ -57,7 +57,9 @@ class UserViewSet(viewsets.ModelViewSet):
             company = Company.objects.create(name=company_name, owner=user, slug=slug)
             user.company = company
             user.save()
-            UserCompanyRelation.objects.create(user=user, company=company, role="Owner")
+            role = Role.objects.get(type="owner")
+            print("user: ", role)
+            UserCompanyRelation.objects.create(user=user, company=company, role=role)
 
         headers = self.get_success_headers(serializer.data)
         return Response(

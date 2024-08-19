@@ -11,10 +11,7 @@ class IsCompanyActive(BasePermission):
     def has_permission(self, request, view):
         user = request.user
         if hasattr(user, "company"):
-            # Check if the company's status is True
             return user.company.status
-
-        # If no company is associated, deny access
         return False
 
 
@@ -36,14 +33,13 @@ class IsLoggedIn(BasePermission):
         are going to be determined."""
         try:
             user = User.objects.get(email=request.user.email)
-            relation = UserCompanyRelation.objects.select_related(
-                "role", "company"
-            ).get(user=user)
-            print("hello: ", user)
+            print("user is here: ", user)
+            relation = UserCompanyRelation.objects.select_related("company").get(
+                user=user
+            )
+            print("relation: ", relation.company)
+            request.li_relation = relation
+            request.company = relation.company
+            return True
         except UserCompanyRelation.DoesNotExist:
             return False
-        request.li_relation = relation
-        request.company = relation.company
-        request.role = relation.role
-        print("request: ", request.company)
-        return True
