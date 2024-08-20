@@ -50,13 +50,9 @@ class OrderViewSet(IsAdminPermissionMixin, viewsets.ModelViewSet):
     filter_backends = [DjangoFilterBackend]
     filterset_fields = ["customer"]
 
-    def get_queryset(self):
-        return Order.objects.filter(customer__company=self.request.company)
-
-    def get_object(self, request, *args, **kwargs):
-        print("request: ", request)
+    def get_object(self):
         item = self.kwargs.get("pk")
-        return get_object_or_404(Order, request, pk=item)
+        return get_object_or_404(Order, pk=item, company=self.request.company)
 
     def perform_create(self, serializer):
         order = serializer.save()

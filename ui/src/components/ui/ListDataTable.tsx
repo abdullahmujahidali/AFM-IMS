@@ -59,7 +59,7 @@ export function ListDataTable({
   columns,
   mutate,
   type,
-  // detailsNavigator,
+  detailsNavigator,
   hidden = false,
   onRowClick,
 }) {
@@ -153,7 +153,7 @@ export function ListDataTable({
                 <DropdownMenuItem
                   onClick={(e) => {
                     e.stopPropagation(); // Prevent the row click handler
-                    console.log("View details", item);
+                    detailsNavigator(item);
                   }}
                 >
                   View details

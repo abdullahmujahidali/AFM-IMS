@@ -91,19 +91,19 @@ export default function InvoiceDetails() {
                     Amount
                   </dt>
                   <dd className="mt-1 text-base font-semibold leading-6 text-gray-900">
-                    Rs. {invoiceDetails.total_price}
+                    Rs. {invoiceDetails?.total_price}
                   </dd>
                 </div>
                 <div className="flex gap-3 px-6 pt-4">
                   <dt className="text-sm font-bold">Status:</dt>
                   <div className="rounded-md py-1 bg-green-50 px-2 text-center text-xs font-medium text-green-600 ring-1 ring-inset ring-green-600/20">
-                    {invoiceDetails.status}
+                    {invoiceDetails?.status}
                   </div>
                 </div>
                 <div className="flex gap-3 px-6 pt-4">
                   <dt className="text-xs font-bold">Payment:</dt>
                   <dd className="rounded-md bg-green-50 px-2 py-1 text-xs font-medium text-green-600 ring-1 ring-inset ring-green-600/20">
-                    {transactionDetails?.results?.[0].status}
+                    {transactionDetails?.results?.[0]?.status}
                   </dd>
                 </div>
                 <div className="mt-6 flex w-full flex-none gap-x-4 border-t border-gray-900/5 px-6 pt-6">
@@ -115,7 +115,7 @@ export default function InvoiceDetails() {
                     />
                   </dt>
                   <dd className="text-sm font-medium leading-6 text-gray-900">
-                    {invoiceDetails.customer.name}
+                    {invoiceDetails?.customer.name}
                   </dd>
                 </div>
                 <div className="mt-4 flex w-full flex-none gap-x-4 px-6">
@@ -156,8 +156,8 @@ export default function InvoiceDetails() {
               <div className="sm:pr-4">
                 <dt className="inline text-gray-500">Issued on</dt>{" "}
                 <dd className="inline text-gray-700">
-                  <time dateTime={invoiceDetails.created_at}>
-                    {invoiceDetails && formatDate(invoiceDetails.created_at)}
+                  <time dateTime={invoiceDetails?.created_at}>
+                    {invoiceDetails && formatDate(invoiceDetails?.created_at)}
                   </time>
                 </dd>
               </div>
@@ -183,10 +183,10 @@ export default function InvoiceDetails() {
                 <dt className="font-semibold text-gray-900">To</dt>
                 <dd className="mt-2 text-gray-500">
                   <span className="font-medium text-gray-900">
-                    {invoiceDetails.customer.name}
+                    {invoiceDetails?.customer.name}
                   </span>
                   <br />
-                  {invoiceDetails.customer.phone_number}
+                  {invoiceDetails?.customer.phone_number}
                 </dd>
               </div>
             </dl>
@@ -223,7 +223,7 @@ export default function InvoiceDetails() {
                 </tr>
               </thead>
               <tbody>
-                {invoiceDetails.items?.map((item) => (
+                {invoiceDetails?.items?.map((item) => (
                   <tr key={item.id} className="border-b border-gray-100">
                     <td className="max-w-0 px-0 py-5 align-top">
                       <div className="truncate font-medium text-gray-900">
@@ -261,7 +261,7 @@ export default function InvoiceDetails() {
                     Subtotal
                   </th>
                   <td className="pt-6 pl-8 pr-0 text-right font-semibold text-gray-900">
-                    Rs. {invoiceDetails.total_price}
+                    Rs. {invoiceDetails?.total_price}
                   </td>
                 </tr>
               </tfoot>
