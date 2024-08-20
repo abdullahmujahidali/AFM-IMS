@@ -11,47 +11,100 @@ class Migration(migrations.Migration):
     initial = True
 
     dependencies = [
-        ('company', '0001_initial'),
-        ('customer', '0001_initial'),
-        ('products', '0001_initial'),
+        ("company", "0001_initial"),
+        ("customer", "0001_initial"),
+        ("products", "0001_initial"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='Sale',
+            name="Sale",
             fields=[
-                ('id', models.UUIDField(default=uuid.uuid4, editable=False, primary_key=True, serialize=False)),
-                ('created_at', models.DateTimeField(default=django.utils.timezone.now)),
-                ('modified_at', models.DateTimeField(auto_now=True)),
-                ('total_amount', models.DecimalField(decimal_places=2, max_digits=10)),
-                ('amount_paid', models.DecimalField(decimal_places=2, default=0, max_digits=10)),
-                ('comments', models.TextField(blank=True, null=True)),
-                ('company', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='%(class)s', to='company.company')),
-                ('customer', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='sales', to='customer.customer')),
+                (
+                    "id",
+                    models.UUIDField(
+                        default=uuid.uuid4,
+                        editable=False,
+                        primary_key=True,
+                        serialize=False,
+                    ),
+                ),
+                ("created_at", models.DateTimeField(default=django.utils.timezone.now)),
+                ("modified_at", models.DateTimeField(auto_now=True)),
+                ("total_amount", models.DecimalField(decimal_places=2, max_digits=10)),
+                (
+                    "amount_paid",
+                    models.DecimalField(decimal_places=2, default=0, max_digits=10),
+                ),
+                ("comments", models.TextField(blank=True, null=True)),
+                (
+                    "company",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="%(class)s",
+                        to="company.company",
+                    ),
+                ),
+                (
+                    "customer",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="sales",
+                        to="customer.customer",
+                    ),
+                ),
             ],
             options={
-                'abstract': False,
+                "abstract": False,
             },
         ),
         migrations.CreateModel(
-            name='SaleProduct',
+            name="SaleProduct",
             fields=[
-                ('id', models.UUIDField(default=uuid.uuid4, editable=False, primary_key=True, serialize=False)),
-                ('created_at', models.DateTimeField(default=django.utils.timezone.now)),
-                ('modified_at', models.DateTimeField(auto_now=True)),
-                ('quantity', models.PositiveIntegerField(default=1)),
-                ('price', models.DecimalField(decimal_places=2, max_digits=10)),
-                ('company', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='%(class)s', to='company.company')),
-                ('product', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='products.product')),
-                ('sale', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='sale.sale')),
+                (
+                    "id",
+                    models.UUIDField(
+                        default=uuid.uuid4,
+                        editable=False,
+                        primary_key=True,
+                        serialize=False,
+                    ),
+                ),
+                ("created_at", models.DateTimeField(default=django.utils.timezone.now)),
+                ("modified_at", models.DateTimeField(auto_now=True)),
+                ("quantity", models.PositiveIntegerField(default=1)),
+                ("price", models.DecimalField(decimal_places=2, max_digits=10)),
+                (
+                    "company",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="%(class)s",
+                        to="company.company",
+                    ),
+                ),
+                (
+                    "product",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to="products.product",
+                    ),
+                ),
+                (
+                    "sale",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE, to="sale.sale"
+                    ),
+                ),
             ],
             options={
-                'abstract': False,
+                "abstract": False,
             },
         ),
         migrations.AddField(
-            model_name='sale',
-            name='products',
-            field=models.ManyToManyField(through='sale.SaleProduct', to='products.product'),
+            model_name="sale",
+            name="products",
+            field=models.ManyToManyField(
+                through="sale.SaleProduct", to="products.product"
+            ),
         ),
     ]

@@ -10,14 +10,18 @@ class Migration(migrations.Migration):
     initial = True
 
     dependencies = [
-        ('company', '0001_initial'),
+        ("company", "0001_initial"),
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='company',
-            name='owner',
-            field=models.OneToOneField(on_delete=django.db.models.deletion.CASCADE, related_name='owned_company', to=settings.AUTH_USER_MODEL),
+            model_name="company",
+            name="owner",
+            field=models.OneToOneField(
+                on_delete=django.db.models.deletion.CASCADE,
+                related_name="owned_company",
+                to=settings.AUTH_USER_MODEL,
+            ),
         ),
     ]

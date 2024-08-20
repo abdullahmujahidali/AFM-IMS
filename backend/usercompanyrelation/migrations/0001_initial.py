@@ -11,33 +11,76 @@ class Migration(migrations.Migration):
     initial = True
 
     dependencies = [
-        ('company', '0001_initial'),
+        ("company", "0001_initial"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='Role',
+            name="Role",
             fields=[
-                ('id', models.UUIDField(default=uuid.uuid4, editable=False, primary_key=True, serialize=False)),
-                ('created_at', models.DateTimeField(default=django.utils.timezone.now)),
-                ('modified_at', models.DateTimeField(auto_now=True)),
-                ('type', models.CharField(choices=[('admin', 'admin'), ('member', 'member'), ('owner', 'owner'), ('finance', 'finance')], max_length=10, unique=True)),
+                (
+                    "id",
+                    models.UUIDField(
+                        default=uuid.uuid4,
+                        editable=False,
+                        primary_key=True,
+                        serialize=False,
+                    ),
+                ),
+                ("created_at", models.DateTimeField(default=django.utils.timezone.now)),
+                ("modified_at", models.DateTimeField(auto_now=True)),
+                (
+                    "type",
+                    models.CharField(
+                        choices=[
+                            ("admin", "admin"),
+                            ("member", "member"),
+                            ("owner", "owner"),
+                            ("finance", "finance"),
+                        ],
+                        max_length=10,
+                        unique=True,
+                    ),
+                ),
             ],
             options={
-                'db_table': 'role',
+                "db_table": "role",
             },
         ),
         migrations.CreateModel(
-            name='UserCompanyRelation',
+            name="UserCompanyRelation",
             fields=[
-                ('id', models.UUIDField(default=uuid.uuid4, editable=False, primary_key=True, serialize=False)),
-                ('created_at', models.DateTimeField(default=django.utils.timezone.now)),
-                ('modified_at', models.DateTimeField(auto_now=True)),
-                ('company', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='%(class)s', to='company.company')),
-                ('role', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='%(class)s', to='usercompanyrelation.role', to_field='type')),
+                (
+                    "id",
+                    models.UUIDField(
+                        default=uuid.uuid4,
+                        editable=False,
+                        primary_key=True,
+                        serialize=False,
+                    ),
+                ),
+                ("created_at", models.DateTimeField(default=django.utils.timezone.now)),
+                ("modified_at", models.DateTimeField(auto_now=True)),
+                (
+                    "company",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="%(class)s",
+                        to="company.company",
+                    ),
+                ),
+                (
+                    "role",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="%(class)s",
+                        to="usercompanyrelation.role",
+                        to_field="type",
+                    ),
+                ),
             ],
             options={
-                'db_table': 'user_company_relation',
+                "db_table": "user_company_relation",
             },
         ),
     ]

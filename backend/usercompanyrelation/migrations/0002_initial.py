@@ -10,18 +10,24 @@ class Migration(migrations.Migration):
     initial = True
 
     dependencies = [
-        ('usercompanyrelation', '0001_initial'),
+        ("usercompanyrelation", "0001_initial"),
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='usercompanyrelation',
-            name='user',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='%(class)s', to=settings.AUTH_USER_MODEL),
+            model_name="usercompanyrelation",
+            name="user",
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.CASCADE,
+                related_name="%(class)s",
+                to=settings.AUTH_USER_MODEL,
+            ),
         ),
         migrations.AddConstraint(
-            model_name='usercompanyrelation',
-            constraint=models.UniqueConstraint(fields=('user', 'company'), name='user_in_company_unique'),
+            model_name="usercompanyrelation",
+            constraint=models.UniqueConstraint(
+                fields=("user", "company"), name="user_in_company_unique"
+            ),
         ),
     ]

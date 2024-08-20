@@ -1,6 +1,7 @@
 """
 Django command to wait for the database to be available.
 """
+
 # Standard Library
 import time
 
