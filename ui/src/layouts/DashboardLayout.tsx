@@ -1,7 +1,4 @@
-import { Button } from "@/components/ui/button";
 import Sidebar from "@/components/ui/Sidebar";
-import { Bars3Icon } from "@heroicons/react/20/solid";
-import { CirclePlusIcon } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Outlet, useNavigate } from "react-router-dom";
 import useSWR from "swr";
@@ -43,31 +40,6 @@ export default function DashboardLayout() {
           collapsed ? "lg:ml-20" : "lg:ml-64"
         }`}
       >
-        <div className="sticky top-0 z-40 flex h-16 shrink-0 border-b border-gray-200 bg-white">
-          <button
-            type="button"
-            className="px-4 text-gray-500 border-r border-gray-200 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-indigo-500 lg:hidden"
-            onClick={() => setSidebarOpen(true)}
-          >
-            <span className="sr-only">Open sidebar</span>
-            <Bars3Icon className="h-6 w-6" aria-hidden="true" />
-          </button>
-          <div className="flex flex-1 justify-between px-4">
-            <div className="flex flex-1"></div>
-            <div className="ml-4 flex items-center lg:ml-6"></div>
-          </div>
-          <Button
-            className="mx-4 my-3 flex gap-2"
-            onClick={() => {
-              navigate("sales/create");
-              window.location.reload();
-            }}
-            variant="outline"
-          >
-            <CirclePlusIcon />
-            Add Sale
-          </Button>
-        </div>
         <main className="relative flex-1 p-4">
           <Outlet />
         </main>
