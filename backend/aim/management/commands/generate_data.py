@@ -4,9 +4,10 @@ import uuid
 # Django
 from django.core.management.base import BaseCommand
 from django.db import transaction
+from users.models import User
 
 # 3rd Party Libraries
-from user.models import User
+# from user.models import User
 
 
 class Command(BaseCommand):

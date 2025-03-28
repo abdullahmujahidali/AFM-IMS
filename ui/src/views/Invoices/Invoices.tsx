@@ -54,7 +54,7 @@ function InvoicesView() {
     mutate,
     error,
     isLoading,
-  } = useSWR("/api/v1/products/");
+  } = useSWR("/api/v1/orders/");
   const { data: productObject } = useSWR(
     selectedProduct ? `/api/v1/products/${selectedProduct.id}` : null
   );

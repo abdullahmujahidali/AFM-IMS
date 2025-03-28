@@ -52,7 +52,7 @@ class OrderViewSet(IsAdminPermissionMixin, viewsets.ModelViewSet):
 
     def get_object(self):
         item = self.kwargs.get("pk")
-        return get_object_or_404(Order, pk=item, company=self.request.company)
+        return get_object_or_404(Customer, pk=item, company=self.request.company)
 
     def perform_create(self, serializer):
         order = serializer.save()
