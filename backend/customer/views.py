@@ -50,19 +50,27 @@ class OrderViewSet(IsAdminPermissionMixin, viewsets.ModelViewSet):
     filter_backends = [DjangoFilterBackend]
     filterset_fields = ["customer"]
 
+    def get_queryset(self):
+        """Get all orders related to the current company."""
+        return (
+            Order.objects.filter(company=self.request.company)
+            .select_related("customer")
+            .prefetch_related("items__product")
+        )
+
     def get_object(self):
         item = self.kwargs.get("pk")
-        return get_object_or_404(Customer, pk=item, company=self.request.company)
+        return get_object_or_404(Order, pk=item, company=self.request.company)
 
     def perform_create(self, serializer):
-        order = serializer.save()
-        total_price = sum(item.price for item in order.items.all())
+        order = serializer.save(company=self.request.company)
+        total_price = sum(item.price * item.quantity for item in order.items.all())
         order.total_price = total_price
         order.save()
 
     def perform_update(self, serializer):
         order = serializer.save()
-        total_price = sum(item.price for item in order.items.all())
+        total_price = sum(item.price * item.quantity for item in order.items.all())
         order.total_price = total_price
         order.save()
 
