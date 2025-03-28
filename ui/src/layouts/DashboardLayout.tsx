@@ -2,28 +2,47 @@ import { Button } from "@/components/ui/button";
 import Sidebar from "@/components/ui/Sidebar";
 import { Bars3Icon } from "@heroicons/react/20/solid";
 import { CirclePlusIcon } from "lucide-react";
-import { Suspense, useState } from "react";
+import { useEffect, useState } from "react";
 import { Outlet, useNavigate } from "react-router-dom";
 import useSWR from "swr";
 
 export default function DashboardLayout() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [collapsed, setCollapsed] = useState(false);
   const { data, isLoading } = useSWR("/api/v1/users/me/");
   const navigate = useNavigate();
+
+  // Add effect to handle screen size changes
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth < 1024) {
+        setCollapsed(false);
+      }
+    };
+
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
   if (isLoading) {
     return <div />;
   }
 
   return data && data?.company?.status ? (
-    <div className="flex bg-white">
+    <div className="flex min-h-screen bg-white">
       <Sidebar
         sidebarOpen={sidebarOpen}
         setSidebarOpen={setSidebarOpen}
         data={data}
         isLoading={isLoading}
+        collapsed={collapsed}
+        setCollapsed={setCollapsed}
       />
-      <div className="flex-1 flex flex-col">
+      <div
+        className={`flex-1 flex flex-col transition-all duration-300 ease-in-out ${
+          collapsed ? "lg:ml-20" : "lg:ml-64"
+        }`}
+      >
         <div className="sticky top-0 z-40 flex h-16 shrink-0 border-b border-gray-200 bg-white">
           <button
             type="button"
@@ -49,10 +68,8 @@ export default function DashboardLayout() {
             Add Sale
           </Button>
         </div>
-        <main className="relative flex-1 p-4 lg:ml-64 xl:ml-72">
-          <Suspense fallback={<span />}>
-            <Outlet />
-          </Suspense>
+        <main className="relative flex-1 p-4">
+          <Outlet />
         </main>
       </div>
     </div>
