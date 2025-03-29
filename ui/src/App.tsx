@@ -23,7 +23,7 @@ import Landing from "./views/Landing/Landing";
 import ProductsView from "./views/Products/Products";
 import CreateSale from "./views/Sales/CreateSale/CreateSale";
 import SalesView from "./views/Sales/Sales";
-import SettingsView from "./views/Settings/AccountSettings";
+import AccountSettings from "./views/Settings/AccountSettings";
 import BillingSettingsView from "./views/Settings/BillingSettings";
 import NotificationsSettings from "./views/Settings/NotificationSettings";
 import TeamSettingsView from "./views/Settings/TeamsSettings";
@@ -137,7 +137,7 @@ const router = createBrowserRouter([
         children: [
           {
             path: "accounts",
-            element: <SettingsView />,
+            element: <AccountSettings />,
           },
           {
             path: "teams",
