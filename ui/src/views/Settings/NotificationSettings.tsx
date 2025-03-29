@@ -547,7 +547,7 @@ export default function NotificationsSettings() {
                   {activityItems.map((item, index) => (
                     <div key={index} className="flex items-start gap-4">
                       <div
-                        className={`mt-1 flex h-8 w-8 items-center justify-center rounded-full 
+                        className={`mt-1 flex h-8 w-8 items-center justify-center rounded-full
                         ${
                           item.type === "sale"
                             ? "bg-green-100"
@@ -559,7 +559,7 @@ export default function NotificationsSettings() {
                         }`}
                       >
                         <item.icon
-                          className={`h-4 w-4 
+                          className={`h-4 w-4
                           ${
                             item.type === "sale"
                               ? "text-green-600"
