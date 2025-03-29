@@ -3,6 +3,7 @@ from aim.utils import generate_unique_slug
 from company.models import Company
 from company.serializers import CompanySerializer
 from django.db import transaction
+from django_filters import rest_framework as filters
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import status, viewsets
 from rest_framework.decorators import action
@@ -14,11 +15,19 @@ from users.models import User
 from users.serializers import UserCreateSerializer, UserSerializer
 
 
+class UserFilter(filters.FilterSet):
+    company = filters.UUIDFilter(field_name="usercompanyrelation__company")
+
+    class Meta:
+        model = User
+        fields = ["id", "email", "first_name", "last_name"]
+
+
 class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializer
     filter_backends = [DjangoFilterBackend]
-    filterset_fields = ["id", "company"]
+    filterset_class = UserFilter
     search_fields = ["first_name", "last_name", "email"]
     authentication_classes = [JWTAuthentication]
 
@@ -42,7 +51,11 @@ class UserViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         if self.request.user.is_authenticated:
-            return User.objects.filter(company=self.request.user.company)
+            if hasattr(self.request, "company") and self.request.company:
+                return User.objects.filter(
+                    usercompanyrelation__company=self.request.company
+                ).distinct()
+            return User.objects.none()
         return User.objects.none()
 
     @transaction.atomic
@@ -115,20 +128,53 @@ class UserViewSet(viewsets.ModelViewSet):
         serializer = UserCreateSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
 
-        company = request.user.company
+        # Try multiple ways to get the company
+        company = None
+
+        # First check if request.company is set by middleware
+        if hasattr(request, "company") and request.company:
+            company = request.company
+
+        # If not, try to get it from the relation
+        if not company:
+            try:
+                relation = UserCompanyRelation.objects.get(user=request.user)
+                company = relation.company
+            except UserCompanyRelation.DoesNotExist:
+                pass
+
+        # If still not found, try from request data
+        if not company and "company" in request.data:
+            company_id = request.data.get("company")
+            try:
+                from company.models import Company
+
+                company = Company.objects.get(id=company_id)
+            except (Company.DoesNotExist, ValueError):
+                pass
+
         if not company:
             return Response(
                 {"error": "You are not associated with any company"},
                 status=status.HTTP_400_BAD_REQUEST,
             )
 
-        new_user = serializer.save(company=company)
+        # Create the user
+        new_user = serializer.save()
 
-        UserCompanyRelation.objects.create(
-            user=new_user,
-            company=company,
-            role="Member",
-        )
+        # Create the relation
+        from usercompanyrelation.models import Role
+
+        role_type = request.data.get("role", "Member")
+
+        # Get or create the role
+        try:
+            role = Role.objects.get(type=role_type)
+        except Role.DoesNotExist:
+            role = Role.objects.get(type="member")  # Default to member
+
+        # Create the relation
+        UserCompanyRelation.objects.create(user=new_user, company=company, role=role)
 
         return Response(
             {"message": f"User {new_user.email} invited successfully"},

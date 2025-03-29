@@ -16,6 +16,7 @@ import SignIn from "./views/Auth/Signin";
 import SignUp from "./views/Auth/Signup";
 import { default as CustomerView } from "./views/Customer/Customer";
 import CustomerDetailView from "./views/Customer/CutomerDetail";
+import Dashboard from "./views/Dashboard/Dashboard";
 import InvoiceDetails from "./views/Invoices/InvoiceItem";
 import InvoicesView from "./views/Invoices/Invoices";
 import Landing from "./views/Landing/Landing";
@@ -24,9 +25,9 @@ import CreateSale from "./views/Sales/CreateSale/CreateSale";
 import SalesView from "./views/Sales/Sales";
 import SettingsView from "./views/Settings/AccountSettings";
 import BillingSettingsView from "./views/Settings/BillingSettings";
+import NotificationsSettings from "./views/Settings/NotificationSettings";
 import TeamSettingsView from "./views/Settings/TeamsSettings";
 import StatisticsView from "./views/Statistics/Statistics";
-import Dashboard from "./views/Dashboard/Dashboard";
 
 const router = createBrowserRouter([
   {
@@ -144,7 +145,7 @@ const router = createBrowserRouter([
           },
           {
             path: "notifications",
-            element: <SettingsView />,
+            element: <NotificationsSettings />,
           },
           {
             path: "billing",

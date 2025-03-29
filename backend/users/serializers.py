@@ -33,6 +33,7 @@ class UserSerializer(serializers.ModelSerializer):
     def get_company(self, obj):
         company_object = Company.objects.get(owner=obj)
         comp = {
+            "id": company_object.id,
             "slug": company_object.slug,
             "status": company_object.status,
             "name": company_object.name,
