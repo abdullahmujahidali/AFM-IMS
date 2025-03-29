@@ -14,7 +14,6 @@ import {
   GlobeAltIcon,
   SignalIcon,
   UserIcon,
-  UsersIcon,
 } from "@heroicons/react/24/outline";
 import { useLocation, useNavigate } from "react-router-dom";
 
@@ -76,12 +75,6 @@ export default function Sidebar({
       icon: ChartBarSquareIcon,
       current: currentPath.startsWith("/dashboard/stats"),
     },
-    {
-      name: "Team",
-      href: "/dashboard/customers/",
-      icon: UsersIcon,
-      current: currentPath.startsWith("/dashboard/team"),
-    },
   ];
 
   // Settings is a separate category
@@ -110,7 +103,7 @@ export default function Sidebar({
           <div className="fixed inset-y-0 left-0 w-64 bg-gradient-to-b from-slate-900 to-slate-800 shadow-xl">
             <div className="flex h-16 items-center justify-between px-4 py-5">
               <div className="flex items-center gap-2">
-                <img alt="AFM Logo" src="/logo.svg" className="h-8 w-8" />
+                <img alt="AFM Logo" src="/logo2.svg" className="h-8 w-8" />
                 <span className="text-xl font-bold text-white">منشی</span>
               </div>
               <Button
@@ -235,7 +228,7 @@ export default function Sidebar({
           {/* Sidebar Header */}
           <div className="flex h-16 items-center justify-between px-4 py-5">
             <div className="flex items-center gap-2">
-              <img alt="AFM Logo" src="/logo.svg" className="h-8 w-8" />
+              <img alt="AFM Logo" src="/logo2.svg" className="h-8 w-8" />
               {!collapsed && (
                 <span className="text-xl font-bold text-white">منشی</span>
               )}

@@ -1,13 +1,12 @@
 import Sidebar from "@/components/ui/Sidebar";
 import { useEffect, useState } from "react";
-import { Outlet, useNavigate } from "react-router-dom";
+import { Outlet } from "react-router-dom";
 import useSWR from "swr";
 
 export default function DashboardLayout() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [collapsed, setCollapsed] = useState(false);
   const { data, isLoading } = useSWR("/api/v1/users/me/");
-  const navigate = useNavigate();
 
   // Add effect to handle screen size changes
   useEffect(() => {
