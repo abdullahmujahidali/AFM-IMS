@@ -6,7 +6,6 @@ import { useLocation } from "react-router-dom";
 export default function SettingsLayout() {
   const location = useLocation();
   const currentPath = location.pathname;
-  console.log(":::: ", currentPath);
 
   const secondaryNavigation = [
     {

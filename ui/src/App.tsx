@@ -14,7 +14,7 @@ import PublicViewLayout from "./layouts/PublicViewLayout";
 import SettingsLayout from "./layouts/SettingsLayout";
 import SignIn from "./views/Auth/Signin";
 import SignUp from "./views/Auth/Signup";
-import Dashboard from "./views/Customer/Customer";
+import { default as CustomerView } from "./views/Customer/Customer";
 import CustomerDetailView from "./views/Customer/CutomerDetail";
 import InvoiceDetails from "./views/Invoices/InvoiceItem";
 import InvoicesView from "./views/Invoices/Invoices";
@@ -26,6 +26,7 @@ import SettingsView from "./views/Settings/AccountSettings";
 import BillingSettingsView from "./views/Settings/BillingSettings";
 import TeamSettingsView from "./views/Settings/TeamsSettings";
 import StatisticsView from "./views/Statistics/Statistics";
+import Dashboard from "./views/Dashboard/Dashboard";
 
 const router = createBrowserRouter([
   {
@@ -52,14 +53,14 @@ const router = createBrowserRouter([
     children: [
       {
         path: "",
-        element: <Navigate to="/dashboard/customers" replace />,
+        element: <Dashboard />,
       },
       {
         path: "customers",
         children: [
           {
             path: "",
-            element: <Dashboard />,
+            element: <CustomerView />,
           },
           {
             path: ":customerId",
